@@ -1,176 +1,257 @@
 # CLAUDE.md
 
-This file gives Claude Code the highest-priority instructions for working inside the `rolling-dice-app/types` repository.
+Highest-priority instructions for working inside the `rolling-dice-app/core`
+repository. When this file conflicts with any local instruction, this file
+wins.
 
-This is the **types** repo of a multi-repo product. It publishes `@rolling-dice-app/types` to GitHub Packages — the shared TypeScript contract consumed by `frontend` and (future) `backend`.
+This repo publishes `@rolling-dice-app/core` to GitHub Packages — the shared
+**domain core** consumed by `frontend` and (future) `backend`. It is the
+upgrade of what used to be `@rolling-dice-app/types`: same boundary discipline,
+broader responsibility (types + pure DND rules).
 
-This repository intentionally does not use a large sub-skill system. This file is the primary working guideline for Claude inside the `types` repo. When this file conflicts with any local instruction, this file wins.
+## STATUS — Migration in progress (read first)
+
+This file describes the **target state** of the repository. As of the time of
+writing, the rename and restructure have **not** been executed yet:
+
+- Workspace folder is still `rolling-dice-app/types/` (target: `core/`).
+- `package.json#name` is still `@rolling-dice-app/types` (target:
+  `@rolling-dice-app/core`).
+- `src/` is still flat (`src/character/`, `src/dnd/`, `src/combat.ts`,
+  `src/spell.ts`, `src/plan-limits.ts`); the target `src/types/` + `src/rules/`
+  split has not been created.
+- `README.md` still describes the old types-only positioning.
+
+When working in this repo before the migration is executed:
+
+- Apply the **boundary rules** in this file to any new contribution as if the
+  rename were already done — do not add anything that would not survive the
+  upgrade.
+- Do **not** add a `derive*` rule yet — `src/rules/` does not exist; rules
+  land in Phase 2's follow-up PRs after the restructure.
+- Do **not** rename files, move files, or change `package.json#name` ad-hoc;
+  the rename is its own dedicated PR.
+
+Remove this STATUS section once Phase 2 (rename + restructure) ships.
 
 ## Required Reading: Org-Level Guidelines
 
-Before any non-trivial change, read the four org-level constitution documents. They define the cross-repo product architecture, what belongs here vs. in consumers, and the boundary protocol. The rest of this file is **types-internal repo convention only**.
+Before any non-trivial change, read the org-level constitution documents:
 
 - <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/product-architecture.md>
 - <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/types-skills.md>
 - <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/frontend-skills.md>
 - <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/backend-skills.md>
 
-In short: this repo is the **single source of truth for shared shapes**. Frontend consumes; backend implements; types declares. Anything framework-specific does not belong here.
+## Mental model
 
-## Common Commands
+`core` defines the shared **domain language**. Two layers:
 
-```sh
-pnpm install           # install deps
-pnpm build             # tsc → dist/ (emits .d.ts + .js + sourcemaps)
-pnpm clean             # rm -rf dist
-pnpm type-check        # tsc --noEmit
-pnpm format            # prettier --write . (apply formatting)
-pnpm format:check      # prettier --check . (CI gate; fails on drift)
-pnpm changeset         # create a release note for the next publish
-pnpm release           # build + changeset publish (CI runs this; manual use rare)
-```
+| Layer    | Purpose                                  | Lives in    |
+|----------|------------------------------------------|-------------|
+| `types/` | What the shared domain data is           | `src/types` |
+| `rules/` | How stable domain values are derived     | `src/rules` |
 
-Single-command workflow for a typical change:
+In one sentence:
 
-```sh
-# 1. edit types under src/
-# 2. verify
-pnpm format
-pnpm type-check
-pnpm build
-# 3. record the change for release
-pnpm changeset
-# 4. commit (changeset file + source change together)
-git add . && git commit -m "feat: …"
-git push origin main
-# 5. CI opens "Version Packages" PR; merging publishes to GitHub Packages
-```
+> `core` defines what the shared domain data is and how stable domain values
+> are derived. `frontend` defines how the data is presented and interacted
+> with. `backend` defines who can access or persist the data.
 
-## Architecture
+## Allowed in `core`
 
-### Repo Layout
+**`types/`**
+- Domain entity types: `Character`, `CharacterProfile`, `CharacterCombatState`,
+  `Spell`, `Item`, `Feature`, `CampaignRecord`, …
+- Domain key unions: `AbilityKey`, `SkillKey`, `ProfessionKey`, `ArmorType`, …
+- API DTOs **only when they are stable public contracts consumed directly by
+  both frontend and backend**. Backend-owned validation schemas, DB rows,
+  route-local request shapes, and implementation-specific response mappers
+  stay in backend. If only one side needs the shape, it does not belong here.
+- Stable domain contracts that change in lockstep across the product.
+
+**`rules/`**
+- Pure derivation functions for SRD-baseline values:
+  `deriveAbilityModifier`, `deriveProficiencyBonus`,
+  `deriveSavingThrowModifier`, `deriveSkillModifier`, `deriveArmorClass`,
+  `deriveMaxHitPoints`, `derivePassivePerception`, `deriveInitiative`, …
+- Internal lookup data (e.g. proficiency-bonus-by-level table) **only when a
+  rule needs it as an implementation detail**, colocated with the rule.
+
+## Forbidden in `core`
+
+- Vue / Nuxt composables, plugins, or anything `<script setup>`
+- Fastify routes, plugins, request lifecycle code
+- Drizzle / Prisma / any database schema
+- Runtime validation schemas (Zod, Valibot, Yup, …) — these belong in the
+  consumer that owns the boundary
+- Backend request/response schemas, frontend form schemas, frontend view
+  models
+- UI labels, i18n keys, Chinese/English display strings, select options, form
+  sections, display order, page-level config
+- Anything that touches `localStorage`, cookies, sessions, HTTP clients, or
+  `process.env`
+- Anything that imports a runtime framework or browser/Node-only API
+
+## The pure-rules contract
+
+A function added under `src/rules/` MUST:
+
+- have no dependency on Vue, Nuxt, Fastify, Drizzle, browser, or Node runtime
+  APIs
+- not read or write `localStorage`, `cookie`, `sessionStorage`, `fetch`,
+  `process.env`, or any global mutable state
+- return the **same output for the same input** every time (deterministic,
+  no `Date.now()`, no `Math.random()`, no I/O)
+- only know about types defined in `core` itself or primitive TypeScript
+  types
+
+A rule answers **"how is this value computed"**. It does **not** answer "when
+should it run", "how should it be displayed", or "where should it be stored".
+
+When the first real `derive*` lands, it MUST land with unit tests. Vitest
+will be added to `devDependencies` at that point — not before.
+
+## SRD baseline only
+
+Rules in `core` ship **SRD-baseline DND 5e** semantics. House rules,
+homebrew variants, and edition forks do **not** belong here unless they are
+added as an explicit, opt-in extension layer agreed at the org level. When in
+doubt: leave it in the consumer.
+
+User-provided overrides may be accepted as rule inputs when they are part of
+the shared domain type — fields like `customBonus`, `override`,
+`manualAdjustment` on a `Character` or `CombatState` are legitimate inputs
+to a `derive*` function and let DM rulings, player customizations, and
+in-story rewards flow through. What core rules must **not** do is encode a
+specific house-rule **policy** (e.g. "always grant +1 AC for shields", "use
+average HP per level"). The rule defines the SRD computation; the data
+carries the variance.
+
+## Why `schemas/` is not in `core`
+
+- Backend runtime schemas track DB shape and HTTP boundary, and change with
+  routes / services / repositories.
+- Frontend form schemas track form flow and UX, and change with the UI.
+- Both have a faster change cadence than shared domain contracts; folding
+  them into `core` would force unrelated version churn on every consumer.
+
+`core` keeps the shared **types** and the shared **derivations**. Each
+consumer brings its own runtime validation.
+
+## Repo Layout (target — post-Phase-2)
 
 ```txt
-types/
+core/
 ├─ src/
-│  ├─ character/              # character data section types
-│  │  ├─ ability.ts           # AbilityScoreInput, AbilityScoreEntry, CharacterAbilityScores
-│  │  ├─ attack.ts            # ArmorClassConfig, DamageDieEntry, AttackEntry
-│  │  ├─ feature.ts           # CharacterFeature, FeatureSource, FeatureUsage(Recovery)
-│  │  ├─ inventory.ts         # InventoryItem, CharacterCurrency, CharacterInventory
-│  │  ├─ profile.ts           # CharacterProfile, CharacterProfessions, CharacterStats
-│  │  ├─ spell-entry.ts       # SpellEntry, SpellLevel, SpellSlots, SpellSlotsDelta
-│  │  ├─ tier.ts              # CharacterTier
-│  │  └─ index.ts             # Character, CharacterCapabilities + barrel
-│  ├─ combat.ts               # CombatHp, DeathSaves, CombatState
-│  ├─ dnd/                    # rule-aligned enums
-│  │  ├─ ability-key.ts       # AbilityKey
-│  │  ├─ alignment.ts         # MoralityKey, OrderKey, AlignmentKey
-│  │  ├─ misc.ts              # SizeKey, GenderKey, ArmorType, WeaponType, DieType, DamageDieType, DamageTypeKey
-│  │  ├─ profession.ts        # ProfessionKey, SubprofessionKey, ProfessionData, ProfessionEntry
-│  │  ├─ skill.ts             # SkillKey, ProficiencyLevel, SkillProficiencies
-│  │  └─ index.ts             # barrel
-│  ├─ spell.ts                # SpellSchool, SpellDto, Spell
-│  └─ index.ts                # root barrel
-├─ .changeset/                # changesets config + pending changeset files
-├─ .github/workflows/         # release.yml (changesets/action publish pipeline)
-├─ dist/                      # build output (emitted, gitignored)
-├─ package.json               # name: @rolling-dice-app/types
+│  ├─ types/
+│  │  ├─ character/        # CharacterProfile, abilities, attacks, features, …
+│  │  ├─ dnd/              # AbilityKey, SkillKey, ProfessionKey, …
+│  │  ├─ combat.ts
+│  │  ├─ spell.ts
+│  │  ├─ plan-limits.ts
+│  │  └─ index.ts
+│  ├─ rules/
+│  │  └─ index.ts          # barrel; derive* functions land here
+│  └─ index.ts             # root barrel
+├─ .changeset/
+├─ .github/workflows/
+├─ dist/                   # build output, gitignored
+├─ package.json            # name: @rolling-dice-app/core
 ├─ tsconfig.json
 └─ README.md
 ```
 
-### TypeScript Configuration
+## Common Commands
 
-- `verbatimModuleSyntax: true` — every cross-file type re-export uses `import type` / `export type`. Plain `import {}` for types is rejected.
-- `strict: true`, `noUncheckedIndexedAccess: true`, `noImplicitOverride: true`, `noFallthroughCasesInSwitch: true`.
-- `declaration: true` + `declarationMap: true` + `sourceMap: true` — consumers get full IDE navigation back to source.
-- Output: `outDir: dist`, `rootDir: src`. `dist/` ships in the published package; `src/` ships too (for `declarationMap` source navigation).
+```sh
+pnpm install
+pnpm build             # tsc → dist/ (.d.ts + .js + sourcemaps)
+pnpm clean             # rm -rf dist
+pnpm type-check        # tsc --noEmit
+pnpm format            # prettier --write .
+pnpm format:check      # prettier --check . (CI gate)
+pnpm changeset         # record release notes
+pnpm release           # build + changeset publish (CI)
+```
 
-### Module System
+## TypeScript / Module config
 
+- `verbatimModuleSyntax: true` — all cross-file type re-exports use
+  `import type` / `export type`.
+- `strict: true`, `noUncheckedIndexedAccess: true`, `noImplicitOverride: true`,
+  `noFallthroughCasesInSwitch: true`.
+- `declaration: true`, `declarationMap: true`, `sourceMap: true` — consumers
+  navigate to source.
 - ESM only (`"type": "module"`). No CommonJS.
-- Each file is its own module; cross-file imports use relative paths (`'./profile'`, `'../dnd/ability-key'`).
-- Barrel files use `export *` (TS resolves the wildcard correctly under `verbatimModuleSyntax`).
+- Each file is a module; barrels use `export *`.
 
-## Adding a New Type
+## Adding a new type
 
-1. **Decide if it belongs here.** Apply the test from `types-skills.md`: would _both_ frontend and backend need this exact thing? If no, it doesn't belong. If the type exists only because a page, form, database table, or API implementation currently needs it, it probably does not belong here.
-2. **Pick the file.** Use the existing layout: character section types under `src/character/<section>.ts`; rule enums under `src/dnd/<topic>.ts`; cross-cutting persistent types at the `src/` root (like `combat.ts`, `spell.ts`).
-3. **Declare with intent.** Use `interface` for object shapes; `type` for unions / aliases / mapped types. Add a JSDoc one-liner stating _what it is_, not _why it was added_.
-4. **Re-export.** If the file is new, add it to its sibling `index.ts` barrel (and to `src/index.ts` if it's at the root). Use `export *`.
-5. **Verify.** `pnpm type-check && pnpm build`.
-6. **Record the release.** `pnpm changeset` — choose `patch` (docs / internal-only changes), `minor` (new types or new optional fields), or `major` (breaking changes). Write a one-line summary.
-7. **Commit both** the source change _and_ the changeset file together.
+1. Apply the responsibility checklist below.
+2. Pick the file under `src/types/<area>/`.
+3. Use `interface` for object shapes; `type` for unions / aliases.
+4. Add a JSDoc one-liner — what it is, not why.
+5. Re-export through the local `index.ts` barrel.
+6. `pnpm format && pnpm type-check && pnpm build`.
+7. `pnpm changeset` (patch / minor / major).
+8. Commit source change + changeset together.
 
-## Release Workflow
+## Adding a new rule
 
-1. Push to `main` triggers `release.yml`.
-2. `changesets/action` reads pending `.changeset/*.md` files, opens (or updates) a "Version Packages" PR that bumps `package.json` version, generates `CHANGELOG.md`, and removes the consumed changeset files.
-3. Merging the Version Packages PR triggers another workflow run; this time `pnpm release` (= `pnpm build && changeset publish`) publishes to GitHub Packages.
-4. `package.json` `publishConfig.registry` points to `https://npm.pkg.github.com`; access is `restricted` (org members only).
-5. CI uses `secrets.GITHUB_TOKEN` for both PR creation and publish; org-level "Allow GitHub Actions to create and approve pull requests" must be enabled.
+1. Confirm it is SRD-baseline and stable across product surfaces.
+2. Place it under `src/rules/<topic>.ts` as a pure function (see contract
+   above). No imports from Vue / Nuxt / Fastify / Drizzle / browser / Node.
+3. Land it with unit tests in the same PR. (If Vitest is not yet wired up,
+   that PR also adds Vitest to `devDependencies` and a `test` script.)
+4. Re-export through `src/rules/index.ts`.
+5. Changeset + commit.
 
-If publish fails, do not amend an old commit and force-push. Investigate, fix forward, push a new commit.
+## Responsibility checklist
 
-## Boundaries
+For any file you are about to add or move, run through these gates **in
+order**. The first "no" tells you it does not belong in `core`.
 
-- **Framework-agnostic.** Do not import or depend on Vue, Nuxt, Pinia, Tailwind, Fastify, Drizzle, Prisma, or any framework. Devtime tooling is intentionally minimal: `@changesets/cli`, `typescript`, `prettier`. Adding anything else (linters, test runners, build plugins) requires explicit approval — keep this tree small on purpose.
-- **No runtime side effects.** Files declare types only. `sideEffects: false` is set in `package.json`; do not break this.
-- **No environment-specific globals.** No `window`, `document`, `process`, Node-only built-ins.
-- **No runtime business logic.** Type-level utilities are allowed when they support shared contracts. Runtime functions, mappers, calculators, validators with side effects, and rule engines are not allowed.
-- **No runtime validation schemas yet.** Runtime schemas (e.g., Zod) may be added only after the org-level types guideline explicitly approves schemas as part of the shared contract package. Do not introduce a runtime schema dependency on your own.
-- **No frontend-only or backend-only shapes.** UI form state lives in frontend; DB schema lives in backend; neither belongs here.
+1. **Shared domain concern?** Does this represent a stable domain contract
+   or pure domain rule that may be consumed across product surfaces? If it
+   only exists for one consumer's implementation detail, send it to that
+   consumer. The test is not "is frontend/backend importing it today" but
+   "is this a shared domain concern, or a consumer-local implementation
+   detail".
+2. **Free of framework/runtime imports?** Any `vue`, `nuxt`, `fastify`,
+   `drizzle`, `pinia`, browser/Node API, `process.env`, `fetch`, storage, or
+   network usage disqualifies it.
+3. **Stable contract or pure derivation?** If it is a runtime validation
+   schema, a request/response shape that one side owns, or UI form state, it
+   does not belong here.
+4. **Free of presentation concerns?** No display labels, i18n keys, select
+   options, display order, form sections, page config, theming.
+5. **For rules only — pure?** Same input → same output, no mutable state,
+   no side effects, no `Date.now()` / `Math.random()`.
+6. **For rules only — SRD baseline?** Homebrew / house-rule variants stay
+   in consumers.
 
-## Naming
-
-- Domain entities: `Foo` (`Character`, `CombatState`, `InventoryItem`).
-- DTOs (when added): `FooDto`, `FooRequest`, `FooResponse` — distinguish input from output explicitly.
-- Enums: prefer string-literal unions (`type ProfessionKey = 'fighter' | …`).
-- Sub-section interfaces composed into a parent: `CharacterProfile`, `CharacterStats`, etc.
-- Constants (when added): `SCREAMING_SNAKE_CASE`.
-
-## Versioning
-
-- **Patch** — JSDoc edits, internal organization, sourcemap-only adjustments. No public-API change.
-- **Minor** — new types, new optional fields, new union members consumers can ignore safely.
-- **Major** — removed types or fields, renamed types, narrowed unions, restructured shapes. Coordinate with frontend and backend before merging.
-
-`package.json.version` is managed by changesets — do not edit it manually.
+If all six are "yes" → it belongs in `core`. Otherwise → it belongs to a
+consumer.
 
 ## Anti-patterns
 
-1. Adding a type that only one consumer needs.
-2. Importing a framework or runtime library.
-3. Adding a function, class, or value-producing export without an approved shared-schema or contract reason.
-4. Skipping `pnpm changeset` on a PR that changes the public surface.
-5. Manually editing `package.json` version or `CHANGELOG.md`.
-6. Force-pushing to `main`.
-7. Adding runtime object manipulation to a package that should remain declaration-focused.
-8. Collapsing request and response into one optional-everything blob.
+1. Adding a type or rule that only one consumer needs.
+2. Importing a framework, runtime library, browser/Node API, or env access.
+3. Adding a Zod / Valibot / Yup schema to `core`.
+4. Adding `i18n` keys, display labels, or UI options to `core`.
+5. Adding a side-effecting "rule" (reads time, RNG, storage, or network).
+6. Skipping `pnpm changeset` on a public-surface change.
+7. Manually editing `package.json#version` or `CHANGELOG.md`.
+8. Force-pushing to `main`.
 
-## Scope Control
+## Versioning
 
-Unless explicitly requested, do not:
+- **Patch** — JSDoc edits, internal organization, sourcemap-only adjustments.
+- **Minor** — new types, new optional fields, new rules, new union members
+  consumers can ignore safely.
+- **Major** — removed types/rules, renamed types, narrowed unions,
+  restructured shapes, changed rule semantics. Coordinate with frontend and
+  backend.
 
-- Add new top-level folders under `src/`.
-- Add a runtime dependency (anything outside `devDependencies`).
-- Modify the `release.yml` workflow.
-- Break backward compatibility in a "patch" or "minor" changeset; if a change is breaking, mark it `major`.
-- Author types describing UI form state, view models, or DB column shapes.
-
-## Default Output Expectations
-
-When asked to **add or change a type**, typically output:
-
-1. Statement of which existing file the change lives in (or proposed new file with rationale).
-2. The diff.
-3. The accompanying changeset entry.
-4. Verification step (`pnpm format && pnpm type-check`).
-
-When asked to **review** a type change:
-
-1. Boundary check (does this belong in `types`?).
-2. Naming / layering check.
-3. Versioning impact (patch / minor / major).
-4. Suggested simplifications.
+`package.json#version` is managed by changesets — do not edit it manually.
