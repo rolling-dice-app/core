@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rolling-dice-app/types.git"
+    "url": "git+https://github.com/rolling-dice-app/core.git"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
