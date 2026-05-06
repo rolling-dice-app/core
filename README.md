@@ -1,11 +1,21 @@
-# @rolling-dice-app/types
+# @rolling-dice-app/core
 
-Shared TypeScript types for the rolling-dice-app project. Consumed by:
+Shared domain core for the rolling-dice-app project. Single source of truth
+for the **shared domain language** that both `frontend` (Nuxt SPA) and
+`backend` (Fastify API) speak.
 
-- [`rolling-dice-app/frontend`](https://github.com/rolling-dice-app/frontend) — Nuxt 4 SPA
-- `rolling-dice-app/backend` — Fastify API（建立中）
+`core` contains:
 
-Published to GitHub Packages under the `@rolling-dice-app` scope.
+- **`src/types/`** — TypeScript types for persistent domain entities and the
+  small number of API DTOs that are truly shared by frontend and backend.
+- **`src/rules/`** — pure, framework-agnostic derivation functions for stable
+  DND values (ability modifiers, proficiency bonus, AC, max HP, passive
+  perception, initiative, …). Currently empty; rules land here in follow-up
+  PRs.
+
+`core` does NOT contain runtime validation schemas, UI labels / i18n /
+options, framework code, or anything that touches storage / network / env.
+See `CLAUDE.md` for the full responsibility checklist.
 
 ## Install
 
@@ -16,10 +26,8 @@ Published to GitHub Packages under the `@rolling-dice-app` scope.
 //npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}
 ```
 
-本機 export `GITHUB_PACKAGES_TOKEN`，CI 用 `secrets.GITHUB_TOKEN`，然後：
-
 ```sh
-pnpm add @rolling-dice-app/types
+pnpm add @rolling-dice-app/core
 ```
 
 ## Develop
@@ -28,6 +36,7 @@ pnpm add @rolling-dice-app/types
 pnpm install
 pnpm build         # tsc → dist/
 pnpm type-check    # tsc --noEmit
+pnpm format        # prettier --write .
 ```
 
 ## Release
@@ -35,26 +44,35 @@ pnpm type-check    # tsc --noEmit
 走 [changesets](https://github.com/changesets/changesets)：
 
 ```sh
-pnpm changeset           # 記錄這次變更（patch / minor / major + 摘要）
+pnpm changeset           # 記錄變更（patch / minor / major + 摘要）
 git add .changeset && git commit -m "chore: changeset"
 git push origin main     # CI 開「Version Packages」PR，merge 後自動 publish
 ```
-
-第一次發版：選 `minor`（0.0.0 → 0.1.0），summary 寫 `initial release`。
 
 ## Layout
 
 ```
 src/
-├─ character/   # 角色資料模型（profile / ability / inventory / spell-entry / attack / feature / tier）
-├─ combat.ts    # CombatHp / DeathSaves / CombatState
-├─ spell.ts     # Spell / SpellDto / SpellSchool
-├─ dnd/         # 規則 enum（profession / ability-key / skill / alignment / misc）
-└─ index.ts     # barrel
+├─ types/      # shared domain types (Character, Spell, AbilityKey, …)
+├─ rules/      # pure derivation functions (deriveAbilityModifier, …)
+└─ index.ts    # root barrel
 ```
 
-## Scope
+## Boundary in one paragraph
 
-- 持久化型別 only — UI form state、dice roll history、adventure log 留在 frontend
-- 不含 Zod runtime schema（後端 spike 啟動再加）
-- 不含資料表（職業數值表等）— 那些屬於前端 static asset
+> `core` defines **what** the shared domain data is and **how** stable domain
+> values are derived. `frontend` defines **how** the data is presented and
+> interacted with. `backend` defines **who** can access or persist the data,
+> and what the runtime contract on the wire looks like.
+
+## Migration from `@rolling-dice-app/types`
+
+This package was renamed from `@rolling-dice-app/types` to
+`@rolling-dice-app/core`. Consumers must:
+
+1. `pnpm remove @rolling-dice-app/types && pnpm add @rolling-dice-app/core`.
+2. Replace `from '@rolling-dice-app/types'` with `from '@rolling-dice-app/core'`
+   — re-exports remain flat at the root, so no import-path changes are needed
+   for existing types.
+
+This is a hard break — there is no alias package.

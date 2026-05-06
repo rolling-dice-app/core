@@ -9,31 +9,6 @@ This repo publishes `@rolling-dice-app/core` to GitHub Packages — the shared
 upgrade of what used to be `@rolling-dice-app/types`: same boundary discipline,
 broader responsibility (types + pure DND rules).
 
-## STATUS — Migration in progress (read first)
-
-This file describes the **target state** of the repository. As of the time of
-writing, the rename and restructure have **not** been executed yet:
-
-- Workspace folder is still `rolling-dice-app/types/` (target: `core/`).
-- `package.json#name` is still `@rolling-dice-app/types` (target:
-  `@rolling-dice-app/core`).
-- `src/` is still flat (`src/character/`, `src/dnd/`, `src/combat.ts`,
-  `src/spell.ts`, `src/plan-limits.ts`); the target `src/types/` + `src/rules/`
-  split has not been created.
-- `README.md` still describes the old types-only positioning.
-
-When working in this repo before the migration is executed:
-
-- Apply the **boundary rules** in this file to any new contribution as if the
-  rename were already done — do not add anything that would not survive the
-  upgrade.
-- Do **not** add a `derive*` rule yet — `src/rules/` does not exist; rules
-  land in Phase 2's follow-up PRs after the restructure.
-- Do **not** rename files, move files, or change `package.json#name` ad-hoc;
-  the rename is its own dedicated PR.
-
-Remove this STATUS section once Phase 2 (rename + restructure) ships.
-
 ## Required Reading: Org-Level Guidelines
 
 Before any non-trivial change, read the org-level constitution documents:
@@ -47,10 +22,10 @@ Before any non-trivial change, read the org-level constitution documents:
 
 `core` defines the shared **domain language**. Two layers:
 
-| Layer    | Purpose                                  | Lives in    |
-|----------|------------------------------------------|-------------|
-| `types/` | What the shared domain data is           | `src/types` |
-| `rules/` | How stable domain values are derived     | `src/rules` |
+| Layer    | Purpose                              | Lives in    |
+| -------- | ------------------------------------ | ----------- |
+| `types/` | What the shared domain data is       | `src/types` |
+| `rules/` | How stable domain values are derived | `src/rules` |
 
 In one sentence:
 
@@ -61,6 +36,7 @@ In one sentence:
 ## Allowed in `core`
 
 **`types/`**
+
 - Domain entity types: `Character`, `CharacterProfile`, `CharacterCombatState`,
   `Spell`, `Item`, `Feature`, `CampaignRecord`, …
 - Domain key unions: `AbilityKey`, `SkillKey`, `ProfessionKey`, `ArmorType`, …
@@ -71,6 +47,7 @@ In one sentence:
 - Stable domain contracts that change in lockstep across the product.
 
 **`rules/`**
+
 - Pure derivation functions for SRD-baseline values:
   `deriveAbilityModifier`, `deriveProficiencyBonus`,
   `deriveSavingThrowModifier`, `deriveSkillModifier`, `deriveArmorClass`,
@@ -139,7 +116,7 @@ carries the variance.
 `core` keeps the shared **types** and the shared **derivations**. Each
 consumer brings its own runtime validation.
 
-## Repo Layout (target — post-Phase-2)
+## Repo Layout
 
 ```txt
 core/
