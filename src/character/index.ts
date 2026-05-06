@@ -22,12 +22,13 @@ export interface CharacterCapabilities {
 }
 
 /** 完整角色資料；五個 section 的組合，加上識別與時間戳 */
-export interface Character extends
-  CharacterProfile,
-  CharacterProfessions,
-  CharacterStats,
-  CharacterCapabilities,
-  CharacterInventory {
+export interface Character
+  extends
+    CharacterProfile,
+    CharacterProfessions,
+    CharacterStats,
+    CharacterCapabilities,
+    CharacterInventory {
   id: string
   createdAt: string
 }

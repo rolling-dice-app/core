@@ -24,6 +24,8 @@ pnpm install           # install deps
 pnpm build             # tsc → dist/ (emits .d.ts + .js + sourcemaps)
 pnpm clean             # rm -rf dist
 pnpm type-check        # tsc --noEmit
+pnpm format            # prettier --write . (apply formatting)
+pnpm format:check      # prettier --check . (CI gate; fails on drift)
 pnpm changeset         # create a release note for the next publish
 pnpm release           # build + changeset publish (CI runs this; manual use rare)
 ```
@@ -33,6 +35,7 @@ Single-command workflow for a typical change:
 ```sh
 # 1. edit types under src/
 # 2. verify
+pnpm format
 pnpm type-check
 pnpm build
 # 3. record the change for release
@@ -92,13 +95,13 @@ types/
 
 ## Adding a New Type
 
-1. **Decide if it belongs here.** Apply the test from `types-skills.md`: would *both* frontend and backend need this exact thing? If no, it doesn't belong. If the type exists only because a page, form, database table, or API implementation currently needs it, it probably does not belong here.
+1. **Decide if it belongs here.** Apply the test from `types-skills.md`: would _both_ frontend and backend need this exact thing? If no, it doesn't belong. If the type exists only because a page, form, database table, or API implementation currently needs it, it probably does not belong here.
 2. **Pick the file.** Use the existing layout: character section types under `src/character/<section>.ts`; rule enums under `src/dnd/<topic>.ts`; cross-cutting persistent types at the `src/` root (like `combat.ts`, `spell.ts`).
-3. **Declare with intent.** Use `interface` for object shapes; `type` for unions / aliases / mapped types. Add a JSDoc one-liner stating *what it is*, not *why it was added*.
+3. **Declare with intent.** Use `interface` for object shapes; `type` for unions / aliases / mapped types. Add a JSDoc one-liner stating _what it is_, not _why it was added_.
 4. **Re-export.** If the file is new, add it to its sibling `index.ts` barrel (and to `src/index.ts` if it's at the root). Use `export *`.
 5. **Verify.** `pnpm type-check && pnpm build`.
 6. **Record the release.** `pnpm changeset` — choose `patch` (docs / internal-only changes), `minor` (new types or new optional fields), or `major` (breaking changes). Write a one-line summary.
-7. **Commit both** the source change *and* the changeset file together.
+7. **Commit both** the source change _and_ the changeset file together.
 
 ## Release Workflow
 
@@ -112,7 +115,7 @@ If publish fails, do not amend an old commit and force-push. Investigate, fix fo
 
 ## Boundaries
 
-- **Framework-agnostic.** Do not import or depend on Vue, Nuxt, Pinia, Tailwind, Fastify, Drizzle, Prisma, or any framework. Devtime tooling (`@changesets/cli`, `typescript`) lives in `devDependencies` and is the only allowed tree.
+- **Framework-agnostic.** Do not import or depend on Vue, Nuxt, Pinia, Tailwind, Fastify, Drizzle, Prisma, or any framework. Devtime tooling is intentionally minimal: `@changesets/cli`, `typescript`, `prettier`. Adding anything else (linters, test runners, build plugins) requires explicit approval — keep this tree small on purpose.
 - **No runtime side effects.** Files declare types only. `sideEffects: false` is set in `package.json`; do not break this.
 - **No environment-specific globals.** No `window`, `document`, `process`, Node-only built-ins.
 - **No runtime business logic.** Type-level utilities are allowed when they support shared contracts. Runtime functions, mappers, calculators, validators with side effects, and rule engines are not allowed.
@@ -163,7 +166,7 @@ When asked to **add or change a type**, typically output:
 1. Statement of which existing file the change lives in (or proposed new file with rationale).
 2. The diff.
 3. The accompanying changeset entry.
-4. Verification step (`pnpm type-check`).
+4. Verification step (`pnpm format && pnpm type-check`).
 
 When asked to **review** a type change:
 

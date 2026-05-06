@@ -1,0 +1,10 @@
+node_modules
+dist
+pnpm-lock.yaml
+
+# Generated / lockfile-like
+*.log
+
+# Changesets-managed; do not reformat
+CHANGELOG.md
+.changeset/*.md

@@ -23,6 +23,8 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "type-check": "tsc -p tsconfig.json --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "release": "pnpm build && changeset publish"
   },
   "publishConfig": {
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
+    "prettier": "^3.8.3",
     "typescript": "5.9.3"
   }
 }
