@@ -1,3 +1,5 @@
+import type { ClassKey } from '../dnd/class.js'
+
 /** 法術環級（1-9，戲法不計） */
 export type SpellLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
@@ -15,4 +17,11 @@ export interface SpellEntry {
   isPrepared: boolean
   /** 是否被玩家標記為常用 */
   isFavorite: boolean
+  /**
+   * 法術來源職業（多職業情境下標記由哪個施法職業學得）。
+   *
+   * TODO: 目前以 optional 形式預留欄位，未強制填寫；待釐清「法術來源歸屬」
+   * 設計後改為必填並補既有資料 migration。詳見多職業 prepare limit 議題。
+   */
+  sourceClass?: ClassKey
 }
