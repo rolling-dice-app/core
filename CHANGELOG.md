@@ -1,5 +1,30 @@
 # @rolling-dice-app/types
 
+## 2.1.1
+
+### Patch Changes
+
+- 7443830: Extract `DieType` and `DamageDieType` from `dnd/misc.ts` into a dedicated
+  `dnd/dice.ts`. Dice are a core DND mechanic, not a "miscellaneous" concept,
+  and deserve their own file alongside `ability-key`, `class`, `skill`, etc.
+
+  Internal-only refactor. Both types continue to be re-exported from the
+  root barrel (`@rolling-dice-app/core`), so consumer imports do not change.
+
+- fd2ee3d: Switch build to `moduleResolution: NodeNext` and add explicit `.js`
+  extensions to all relative imports / re-exports in source.
+
+  Previously `core` built with `moduleResolution: Bundler`, which produced
+  `dist/**/*.js` containing extensionless imports like
+  `export * from './types'`. Bundler-based consumers (Vite / Nuxt / webpack)
+  handle this fine, but Node's native ESM resolver is strict and throws
+  `ERR_UNSUPPORTED_DIR_IMPORT`, making the package unusable from a plain
+  Node runtime — including the backend (Fastify under `tsx` / `node`).
+
+  No public API changes. Consumers continue to write
+  `import { ... } from '@rolling-dice-app/core'` exactly as before; only the
+  internal dist resolution paths now satisfy the NodeNext spec.
+
 ## 2.1.0
 
 ### Minor Changes
