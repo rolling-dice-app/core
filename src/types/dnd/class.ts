@@ -1,4 +1,5 @@
 import type { AbilityKey } from './ability-key.js'
+import type { DieType } from './dice.js'
 
 /** 職業 key（D&D 5e 13 項標準 class） */
 export type ClassKey =
@@ -159,14 +160,38 @@ export type SubclassKey =
   | 'artillerist'
   | 'battleSmith'
 
-/** 職業靜態設定資料 */
-export interface ClassData {
-  /** 職業中文名稱 */
-  label: string
-  /** 生命骰面數（例如 12 代表 d12） */
-  hitDie: number
-  /** D&D 5e 標準豁免熟練屬性（兩項） */
-  savingThrowProficiencies: readonly AbilityKey[]
+/** 各職業 SRD 生命骰（值為骰子面數） */
+export const CLASS_HIT_DICE: Readonly<Record<ClassKey, DieType>> = {
+  artificer: 8,
+  barbarian: 12,
+  bard: 8,
+  cleric: 8,
+  druid: 8,
+  fighter: 10,
+  monk: 8,
+  paladin: 10,
+  ranger: 10,
+  rogue: 8,
+  sorcerer: 6,
+  warlock: 8,
+  wizard: 6,
+}
+
+/** 各職業 SRD 豁免熟練屬性（每 class 固定兩項） */
+export const CLASS_SAVING_THROW_PROFICIENCIES: Readonly<Record<ClassKey, readonly AbilityKey[]>> = {
+  artificer: ['constitution', 'intelligence'],
+  barbarian: ['strength', 'constitution'],
+  bard: ['dexterity', 'charisma'],
+  cleric: ['wisdom', 'charisma'],
+  druid: ['intelligence', 'wisdom'],
+  fighter: ['strength', 'constitution'],
+  monk: ['strength', 'dexterity'],
+  paladin: ['wisdom', 'charisma'],
+  ranger: ['strength', 'dexterity'],
+  rogue: ['dexterity', 'intelligence'],
+  sorcerer: ['constitution', 'charisma'],
+  warlock: ['wisdom', 'charisma'],
+  wizard: ['intelligence', 'wisdom'],
 }
 
 /** 單一職業條目：職業 key 與該職業等級 */
