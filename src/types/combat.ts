@@ -4,7 +4,7 @@ import type { ClassKey } from './dnd/class.js'
 
 /** 戰鬥當下的 HP 子結構：當前生命 / 臨時生命 / 最大生命臨時加減 */
 export interface CombatHp {
-  /** 目前生命值；null 表示未開始追蹤，UI 應顯示 effectiveMaxHp */
+  /** 目前生命值；null 表示未開始追蹤 */
   current: number | null
   /** 臨時生命值，受傷時優先扣 */
   tempHp: number
