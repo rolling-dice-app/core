@@ -1,6 +1,6 @@
 import type { ClassKey } from './dnd/class.js'
 
-/** 法術學派（以英文 camelCase 為 key，中文僅為顯示 label） */
+/** 法術學派 */
 export type SpellSchool =
   | 'abjuration'
   | 'conjuration'
@@ -25,7 +25,7 @@ export type SourceKey =
   | 'TDCSR'
   | 'XGE'
 
-/** 來自 public/json/spells.json 的原始法術資料 */
+/** 法術完整資料的跨邊界公開契約 */
 export interface SpellDto {
   id: string
   name: string
@@ -44,6 +44,3 @@ export interface SpellDto {
   classes: ClassKey[]
   desc: string
 }
-
-/** 正規化後的法術資料，供 UI 使用 */
-export type Spell = SpellDto
