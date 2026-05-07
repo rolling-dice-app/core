@@ -19,12 +19,6 @@ export type ArmorType = 'light' | 'medium' | 'heavy' | 'none'
 /** 武器類型 */
 export type WeaponType = 'simple' | 'martial'
 
-/** 一般骰面 */
-export type DieType = 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100'
-
-/** 傷害骰可用骰面（不含 d20、d100） */
-export type DamageDieType = Extract<DieType, 'd4' | 'd6' | 'd8' | 'd10' | 'd12'>
-
 /** D&D 5e 13 種傷害類型 */
 export type DamageTypeKey =
   | 'bludgeoning' // 鈍擊

@@ -1,5 +1,6 @@
 export * from './ability-key.js'
 export * from './alignment.js'
+export * from './dice.js'
 export * from './misc.js'
 export * from './class.js'
 export * from './skill.js'

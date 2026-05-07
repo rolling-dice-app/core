@@ -1,5 +1,6 @@
 import type { AbilityKey } from '../dnd/ability-key.js'
-import type { ArmorType, DamageDieType, DamageTypeKey } from '../dnd/misc.js'
+import type { DamageDieType } from '../dnd/dice.js'
+import type { ArmorType, DamageTypeKey } from '../dnd/misc.js'
 
 /** 護甲等級設定 */
 export interface ArmorClassConfig {
