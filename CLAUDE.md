@@ -14,7 +14,7 @@ broader responsibility (types + pure DND rules).
 Before any non-trivial change, read the org-level constitution documents:
 
 - <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/product-architecture.md>
-- <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/types-skills.md>
+- <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/core-skills.md>
 - <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/frontend-skills.md>
 - <https://raw.githubusercontent.com/rolling-dice-app/guideline/main/backend-skills.md>
 
