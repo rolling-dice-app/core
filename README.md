@@ -41,13 +41,29 @@ pnpm format        # prettier --write .
 
 ## Release
 
-走 [changesets](https://github.com/changesets/changesets)：
+走 [changesets](https://github.com/changesets/changesets)，**版本號與 publish 全部由 CI 處理**，本地只負責記錄變更。
+
+### Do
 
 ```sh
 pnpm changeset           # 記錄變更（patch / minor / major + 摘要）
-git add .changeset && git commit -m "chore: changeset"
-git push origin main     # CI 開「Version Packages」PR，merge 後自動 publish
+# 把 source 改動 + .changeset/<file>.md 一起 commit
+git add . && git commit -m "feat(types): ..."
+git push origin main
 ```
+
+之後：
+
+1. CI 偵測 pending changeset → 開 `chore: version packages` PR（branch `changeset-release/main`）
+2. Review + merge 該 PR → CI 自動 publish 並打 `vX.Y.Z` tag
+
+### Don't
+
+- ❌ `pnpm changeset version` — 本地消化 changeset，會與 bot 的 release PR 撞車造成 non-fast-forward push
+- ❌ `pnpm changeset publish` — publish 是 CI 的事
+- ❌ 手改 `package.json#version` 或 `CHANGELOG.md`
+
+詳細失敗模式與緊急手動 publish 流程見 `CLAUDE.md` 的 Release Workflow 段落。
 
 ## Layout
 

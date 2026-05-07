@@ -148,9 +148,11 @@ pnpm clean             # rm -rf dist
 pnpm type-check        # tsc --noEmit
 pnpm format            # prettier --write .
 pnpm format:check      # prettier --check . (CI gate)
-pnpm changeset         # record release notes
-pnpm release           # build + changeset publish (CI)
+pnpm changeset         # record release notes (interactive prompt)
 ```
+
+Versioning and publishing run **only** in CI — see "Release Workflow" below.
+Do not invoke `pnpm changeset version` or `pnpm changeset publish` locally.
 
 ## TypeScript / Module config
 
@@ -219,8 +221,62 @@ consumer.
 4. Adding `i18n` keys, display labels, or UI options to `core`.
 5. Adding a side-effecting "rule" (reads time, RNG, storage, or network).
 6. Skipping `pnpm changeset` on a public-surface change.
-7. Manually editing `package.json#version` or `CHANGELOG.md`.
+7. Manually editing `package.json#version` or `CHANGELOG.md`, **or running
+   `pnpm changeset version` / `pnpm changeset publish` locally**. All version
+   bumps and publishes go through the CI release flow.
 8. Force-pushing to `main`.
+
+## Release Workflow
+
+Release is fully automated by `.github/workflows/release.yml` +
+`changesets/action`. Local clones only **author** changesets; they never
+**consume** them.
+
+### What you do locally
+
+1. Make the source change.
+2. `pnpm changeset` — pick `patch` / `minor` / `major` and write the summary.
+   This produces a new file under `.changeset/`.
+3. Commit the source change **and** the changeset file together. Push to
+   `main`.
+
+### What CI does
+
+1. On every push to `main`, the Release workflow runs.
+2. If there are pending changesets, `changesets/action` opens (or updates) a
+   PR titled `chore: version packages` on branch `changeset-release/main`.
+   That PR consumes all pending changesets, bumps `package.json#version`,
+   and writes `CHANGELOG.md`.
+3. Reviewer merges the PR.
+4. The next workflow run on `main` finds no pending changesets but a
+   version ahead of the published one, so it publishes to GitHub Packages
+   and tags `vX.Y.Z`.
+
+### Do not
+
+- **Never run `pnpm changeset version`** locally. It bumps version and
+  consumes changesets — exactly what the bot's PR will do. If both happen,
+  your local `main` diverges from the bot's `changeset-release/main`
+  branch and you have to rebase / drop commits to recover.
+- **Never run `pnpm changeset publish`** locally. Publishing is CI's job
+  (it has the registry token and the audit trail).
+- **Never hand-edit `package.json#version`** or `CHANGELOG.md`.
+
+### Why this matters
+
+The bot pattern produces a clean audit trail: every published version has
+a corresponding `changeset-release/main` PR you can review, comment on, and
+merge with intent. Local `pnpm changeset version` writes the same files
+but with no PR, no review, and races the bot. The first symptom is
+non-fast-forward push errors; the recovery cost grows with how many
+unrelated changesets were in flight.
+
+### If you genuinely need an emergency manual publish
+
+Disable or branch the bot run, set `GITHUB_PACKAGES_TOKEN` in
+your shell, run `pnpm build` then `pnpm exec changeset publish`. Open an
+issue documenting why CI was bypassed. This path should be rare and
+reviewed; treat it as breaking the workflow, not as a routine option.
 
 ## Versioning
 

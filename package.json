@@ -24,8 +24,7 @@
     "clean": "rm -rf dist",
     "type-check": "tsc -p tsconfig.json --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "release": "pnpm build && changeset publish"
+    "format:check": "prettier --check ."
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
