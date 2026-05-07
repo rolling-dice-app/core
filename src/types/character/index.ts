@@ -2,7 +2,7 @@ import type { AbilityKey } from '../dnd/ability-key'
 import type { AttackEntry } from './attack'
 import type { CharacterFeature } from './feature'
 import type { CharacterInventory } from './inventory'
-import type { CharacterProfessions, CharacterProfile, CharacterStats } from './profile'
+import type { CharacterClasses, CharacterProfile, CharacterStats } from './profile'
 import type { SpellEntry, SpellSlotsDelta } from './spell-entry'
 
 /** 角色能力 section（攻擊、施法、特性） */
@@ -25,7 +25,7 @@ export interface CharacterCapabilities {
 export interface Character
   extends
     CharacterProfile,
-    CharacterProfessions,
+    CharacterClasses,
     CharacterStats,
     CharacterCapabilities,
     CharacterInventory {

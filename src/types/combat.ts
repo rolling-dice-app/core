@@ -1,6 +1,6 @@
 import type { SpellLevel } from './character/spell-entry'
 import type { AbilityKey } from './dnd/ability-key'
-import type { ProfessionKey } from './dnd/profession'
+import type { ClassKey } from './dnd/class'
 
 /** 戰鬥當下的 HP 子結構：當前生命 / 臨時生命 / 最大生命臨時加減 */
 export interface CombatHp {
@@ -32,8 +32,8 @@ export interface CombatState {
   savingThrowAdjustments: Partial<Record<AbilityKey, number>>
   /** 各特性已使用次數（key = feature.id）；未出現的 key 視為 0（未消耗） */
   featureUsesSpent: Partial<Record<string, number>>
-  /** 各職業已使用生命骰數（key = ProfessionKey）；未出現的 key 視為 0 */
-  hitDiceUsed: Partial<Record<ProfessionKey, number>>
+  /** 各職業已使用生命骰數（key = ClassKey）；未出現的 key 視為 0 */
+  hitDiceUsed: Partial<Record<ClassKey, number>>
   /** 各環級已使用一般法術位數（key = SpellLevel）；未出現的 key 視為 0 */
   spellSlotsUsed: Partial<Record<SpellLevel, number>>
   /** 各環級已使用契術環位數（key = SpellLevel）；未出現的 key 視為 0 */

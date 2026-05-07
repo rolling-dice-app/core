@@ -1,7 +1,7 @@
 import type { AbilityKey } from '../dnd/ability-key'
 import type { AlignmentKey } from '../dnd/alignment'
 import type { GenderKey } from '../dnd/misc'
-import type { ProfessionEntry } from '../dnd/profession'
+import type { ClassEntry } from '../dnd/class'
 import type { SkillProficiencies } from '../dnd/skill'
 import type { CharacterAbilityScores } from './ability'
 import type { ArmorClassConfig } from './attack'
@@ -28,8 +28,8 @@ export interface CharacterProfile {
 }
 
 /** 角色職業 section */
-export interface CharacterProfessions {
-  professions: ProfessionEntry[]
+export interface CharacterClasses {
+  classes: ClassEntry[]
 }
 
 /** 角色屬性與戰鬥相關數值 section */

@@ -1,4 +1,4 @@
-import type { ProfessionKey } from './dnd/profession'
+import type { ClassKey } from './dnd/class'
 
 /** 法術學派（以英文 camelCase 為 key，中文僅為顯示 label） */
 export type SpellSchool =
@@ -41,7 +41,7 @@ export interface SpellDto {
   concentration: boolean
   ritual: boolean
   source: SourceKey
-  classes: ProfessionKey[]
+  classes: ClassKey[]
   desc: string
 }
 

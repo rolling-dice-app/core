@@ -1,7 +1,7 @@
 import type { AbilityKey } from './ability-key'
 
-/** 職業 key（D&D 5e 13 項標準職業） */
-export type ProfessionKey =
+/** 職業 key（D&D 5e 13 項標準 class） */
+export type ClassKey =
   | 'artificer' // 奇械師
   | 'barbarian' // 野蠻人
   | 'bard' // 吟遊詩人
@@ -17,10 +17,10 @@ export type ProfessionKey =
   | 'wizard' // 魔法師
 
 /**
- * 子職業 key（PHB / Xanathar's / Tasha's 全部官方子職業；
+ * 子職業 key（subclass；PHB / Xanathar's / Tasha's 全部官方子職業；
  * wildMagicSorcerer 為避免與野蠻人 wildMagic 衝突而改名）
  */
-export type SubprofessionKey =
+export type SubclassKey =
   // Barbarian
   | 'berserker'
   | 'totemWarrior'
@@ -160,7 +160,7 @@ export type SubprofessionKey =
   | 'battleSmith'
 
 /** 職業靜態設定資料 */
-export interface ProfessionData {
+export interface ClassData {
   /** 職業中文名稱 */
   label: string
   /** 生命骰面數（例如 12 代表 d12） */
@@ -170,11 +170,11 @@ export interface ProfessionData {
 }
 
 /** 單一職業條目：職業 key 與該職業等級 */
-export interface ProfessionEntry {
-  /** 職業 */
-  profession: ProfessionKey
+export interface ClassEntry {
+  /** 職業 class key */
+  classKey: ClassKey
   /** 該職業等級（1–20） */
   level: number
   /** 流派 / 範型（subclass / archetype），enum key；未選以 null 表示 */
-  subprofession: SubprofessionKey | null
+  subclass: SubclassKey | null
 }
