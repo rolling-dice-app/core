@@ -4,6 +4,7 @@
 //   CombatState  -> CombatStateDTO
 // 規則：只有「直接做為 HTTP request/response top-level shape」的型別才加 DTO 後綴；
 // AbilityScoreEntry / ArmorClassConfig / SpellLevel 等 rule / sub-shape 不加。
+export * from './auth.js'
 export * from './character/index.js'
 export * from './combat.js'
 export * from './dnd/index.js'
