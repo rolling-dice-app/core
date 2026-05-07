@@ -1,10 +1,10 @@
-import type { AbilityKey } from '../dnd/ability-key'
-import type { AlignmentKey } from '../dnd/alignment'
-import type { GenderKey } from '../dnd/misc'
-import type { ClassEntry } from '../dnd/class'
-import type { SkillProficiencies } from '../dnd/skill'
-import type { CharacterAbilityScores } from './ability'
-import type { ArmorClassConfig } from './attack'
+import type { AbilityKey } from '../dnd/ability-key.js'
+import type { AlignmentKey } from '../dnd/alignment.js'
+import type { GenderKey } from '../dnd/misc.js'
+import type { ClassEntry } from '../dnd/class.js'
+import type { SkillProficiencies } from '../dnd/skill.js'
+import type { CharacterAbilityScores } from './ability.js'
+import type { ArmorClassConfig } from './attack.js'
 
 /** 角色基本資料 section */
 export interface CharacterProfile {

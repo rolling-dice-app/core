@@ -1,9 +1,9 @@
-import type { AbilityKey } from '../dnd/ability-key'
-import type { AttackEntry } from './attack'
-import type { CharacterFeature } from './feature'
-import type { CharacterInventory } from './inventory'
-import type { CharacterClasses, CharacterProfile, CharacterStats } from './profile'
-import type { SpellEntry, SpellSlotsDelta } from './spell-entry'
+import type { AbilityKey } from '../dnd/ability-key.js'
+import type { AttackEntry } from './attack.js'
+import type { CharacterFeature } from './feature.js'
+import type { CharacterInventory } from './inventory.js'
+import type { CharacterClasses, CharacterProfile, CharacterStats } from './profile.js'
+import type { SpellEntry, SpellSlotsDelta } from './spell-entry.js'
 
 /** 角色能力 section（攻擊、施法、特性） */
 export interface CharacterCapabilities {
@@ -33,10 +33,10 @@ export interface Character
   createdAt: string
 }
 
-export * from './ability'
-export * from './attack'
-export * from './feature'
-export * from './inventory'
-export * from './profile'
-export * from './spell-entry'
-export * from './tier'
+export * from './ability.js'
+export * from './attack.js'
+export * from './feature.js'
+export * from './inventory.js'
+export * from './profile.js'
+export * from './spell-entry.js'
+export * from './tier.js'

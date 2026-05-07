@@ -1,4 +1,4 @@
-import type { AbilityKey } from '../dnd/ability-key'
+import type { AbilityKey } from '../dnd/ability-key.js'
 
 /** 屬性原始輸入（origin + 種族加值；亦為 AbilityScoreEntry 的基底） */
 export interface AbilityScoreInput {

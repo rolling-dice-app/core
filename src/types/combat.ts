@@ -1,6 +1,6 @@
-import type { SpellLevel } from './character/spell-entry'
-import type { AbilityKey } from './dnd/ability-key'
-import type { ClassKey } from './dnd/class'
+import type { SpellLevel } from './character/spell-entry.js'
+import type { AbilityKey } from './dnd/ability-key.js'
+import type { ClassKey } from './dnd/class.js'
 
 /** 戰鬥當下的 HP 子結構：當前生命 / 臨時生命 / 最大生命臨時加減 */
 export interface CombatHp {

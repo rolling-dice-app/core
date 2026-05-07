@@ -1,4 +1,4 @@
-import type { ClassKey } from './dnd/class'
+import type { ClassKey } from './dnd/class.js'
 
 /** 法術學派（以英文 camelCase 為 key，中文僅為顯示 label） */
 export type SpellSchool =

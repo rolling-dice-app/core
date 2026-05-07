@@ -1,4 +1,4 @@
-import type { AbilityKey } from './ability-key'
+import type { AbilityKey } from './ability-key.js'
 
 /** 職業 key（D&D 5e 13 項標準 class） */
 export type ClassKey =
