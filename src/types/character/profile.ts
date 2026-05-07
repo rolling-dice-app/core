@@ -1,6 +1,6 @@
 import type { AbilityKey } from '../dnd/ability-key.js'
 import type { AlignmentKey } from '../dnd/alignment.js'
-import type { GenderKey } from '../dnd/misc.js'
+import type { GenderKey } from '../dnd/gender.js'
 import type { ClassEntry } from '../dnd/class.js'
 import type { SkillProficiencies } from '../dnd/skill.js'
 import type { CharacterAbilityScores } from './ability.js'
