@@ -1,28 +1,32 @@
 /** 技能 key（D&D 5e 18 項標準技能） */
-export type SkillKey =
+export const SKILL_KEYS = [
   // 力量
-  | 'athletics' // 運動
+  'athletics', // 運動
   // 敏捷
-  | 'acrobatics' // 特技
-  | 'sleightOfHand' // 巧手
-  | 'stealth' // 隱匿
+  'acrobatics', // 特技
+  'sleightOfHand', // 巧手
+  'stealth', // 隱匿
   // 智力
-  | 'arcana' // 奧秘
-  | 'history' // 歷史
-  | 'investigation' // 調查
-  | 'nature' // 自然
-  | 'religion' // 宗教
+  'arcana', // 奧秘
+  'history', // 歷史
+  'investigation', // 調查
+  'nature', // 自然
+  'religion', // 宗教
   // 感知
-  | 'animalHandling' // 馴獸
-  | 'insight' // 洞察
-  | 'medicine' // 醫藥
-  | 'perception' // 察覺
-  | 'survival' // 求生
+  'animalHandling', // 馴獸
+  'insight', // 洞察
+  'medicine', // 醫藥
+  'perception', // 察覺
+  'survival', // 求生
   // 魅力
-  | 'deception' // 欺瞞
-  | 'intimidation' // 威嚇
-  | 'performance' // 表演
-  | 'persuasion' // 說服
+  'deception', // 欺瞞
+  'intimidation', // 威嚇
+  'performance', // 表演
+  'persuasion', // 說服
+] as const
+
+/** 技能 key（D&D 5e 18 項標準技能） */
+export type SkillKey = (typeof SKILL_KEYS)[number]
 
 /** 熟練等級：無熟練、熟練、專精 */
 export type ProficiencyLevel =

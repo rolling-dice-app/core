@@ -2,163 +2,174 @@ import type { AbilityKey } from './ability-key.js'
 import type { DieType } from './dice.js'
 
 /** 職業 key（D&D 5e 13 項標準 class） */
-export type ClassKey =
-  | 'artificer' // 奇械師
-  | 'barbarian' // 野蠻人
-  | 'bard' // 吟遊詩人
-  | 'cleric' // 牧師
-  | 'druid' // 德魯伊
-  | 'fighter' // 戰士
-  | 'monk' // 武僧
-  | 'paladin' // 聖騎士
-  | 'ranger' // 游俠
-  | 'rogue' // 遊蕩者
-  | 'sorcerer' // 術士
-  | 'warlock' // 契術師
-  | 'wizard' // 魔法師
+export const CLASS_KEYS = [
+  'artificer', // 奇械師
+  'barbarian', // 野蠻人
+  'bard', // 吟遊詩人
+  'cleric', // 牧師
+  'druid', // 德魯伊
+  'fighter', // 戰士
+  'monk', // 武僧
+  'paladin', // 聖騎士
+  'ranger', // 游俠
+  'rogue', // 遊蕩者
+  'sorcerer', // 術士
+  'warlock', // 契術師
+  'wizard', // 魔法師
+] as const
+
+/** 職業 key（D&D 5e 13 項標準 class） */
+export type ClassKey = (typeof CLASS_KEYS)[number]
 
 /**
  * 子職業 key（subclass；PHB / Xanathar's / Tasha's 全部官方子職業；
  * wildMagicSorcerer 為避免與野蠻人 wildMagic 衝突而改名）
  */
-export type SubclassKey =
+export const SUBCLASS_KEYS = [
   // Barbarian
-  | 'berserker'
-  | 'totemWarrior'
-  | 'ancestralGuardian'
-  | 'stormHerald'
-  | 'zealot'
-  | 'beast'
-  | 'battlerager'
-  | 'wildMagic'
-  | 'giant'
-  | 'Juggernaut'
+  'berserker',
+  'totemWarrior',
+  'ancestralGuardian',
+  'stormHerald',
+  'zealot',
+  'beast',
+  'battlerager',
+  'wildMagic',
+  'giant',
+  'Juggernaut',
   // Bard
-  | 'lore'
-  | 'valor'
-  | 'glamour'
-  | 'swords'
-  | 'whispers'
-  | 'creation'
-  | 'eloquence'
-  | 'spirits'
-  | 'tragedy'
+  'lore',
+  'valor',
+  'glamour',
+  'swords',
+  'whispers',
+  'creation',
+  'eloquence',
+  'spirits',
+  'tragedy',
   // Cleric
-  | 'knowledge'
-  | 'life'
-  | 'light'
-  | 'nature'
-  | 'tempest'
-  | 'trickery'
-  | 'war'
-  | 'forge'
-  | 'grave'
-  | 'arcana'
-  | 'order'
-  | 'peace'
-  | 'twilight'
-  | 'blood'
-  | 'moon'
+  'knowledge',
+  'life',
+  'light',
+  'nature',
+  'tempest',
+  'trickery',
+  'war',
+  'forge',
+  'grave',
+  'arcana',
+  'order',
+  'peace',
+  'twilight',
+  'blood',
+  'moon',
   // Druid
-  | 'land'
-  | 'dreams'
-  | 'shepherd'
-  | 'spores'
-  | 'stars'
-  | 'wildfire'
-  | 'blighted'
+  'land',
+  'dreams',
+  'shepherd',
+  'spores',
+  'stars',
+  'wildfire',
+  'blighted',
   // Fighter
-  | 'champion'
-  | 'battleMaster'
-  | 'eldritchKnight'
-  | 'arcaneArcher'
-  | 'cavalier'
-  | 'samurai'
-  | 'purpleDragonKnight'
-  | 'echoKnight'
-  | 'psiWarrior'
-  | 'runeKnight'
+  'champion',
+  'battleMaster',
+  'eldritchKnight',
+  'arcaneArcher',
+  'cavalier',
+  'samurai',
+  'purpleDragonKnight',
+  'echoKnight',
+  'psiWarrior',
+  'runeKnight',
   // Monk
-  | 'openHand'
-  | 'shadow'
-  | 'fourElements'
-  | 'drunkenMaster'
-  | 'kensei'
-  | 'sunSoul'
-  | 'longDeath'
-  | 'mercy'
-  | 'astralSelf'
-  | 'ascendantDragon'
-  | 'cobaltSoul'
+  'openHand',
+  'shadow',
+  'fourElements',
+  'drunkenMaster',
+  'kensei',
+  'sunSoul',
+  'longDeath',
+  'mercy',
+  'astralSelf',
+  'ascendantDragon',
+  'cobaltSoul',
   // Paladin
-  | 'devotion'
-  | 'ancients'
-  | 'vengeance'
-  | 'crown'
-  | 'conquest'
-  | 'redemption'
-  | 'glory'
-  | 'watchers'
-  | 'sea'
+  'devotion',
+  'ancients',
+  'vengeance',
+  'crown',
+  'conquest',
+  'redemption',
+  'glory',
+  'watchers',
+  'sea',
   // Ranger
-  | 'hunter'
-  | 'beastMaster'
-  | 'gloomStalker'
-  | 'horizonWalker'
-  | 'monsterSlayer'
-  | 'feyWanderer'
-  | 'swarmkeeper'
-  | 'drakewarden'
+  'hunter',
+  'beastMaster',
+  'gloomStalker',
+  'horizonWalker',
+  'monsterSlayer',
+  'feyWanderer',
+  'swarmkeeper',
+  'drakewarden',
   // Rogue
-  | 'thief'
-  | 'assassin'
-  | 'arcaneTrickster'
-  | 'inquisitive'
-  | 'mastermind'
-  | 'scout'
-  | 'swashbuckler'
-  | 'phantom'
-  | 'soulknife'
+  'thief',
+  'assassin',
+  'arcaneTrickster',
+  'inquisitive',
+  'mastermind',
+  'scout',
+  'swashbuckler',
+  'phantom',
+  'soulknife',
   // Sorcerer
-  | 'draconicBloodline'
-  | 'wildMagicSorcerer'
-  | 'divineSoul'
-  | 'shadowMagic'
-  | 'stormSorcery'
-  | 'aberrantMind'
-  | 'clockworkSoul'
-  | 'lunarSorcery'
-  | 'runeChild'
+  'draconicBloodline',
+  'wildMagicSorcerer',
+  'divineSoul',
+  'shadowMagic',
+  'stormSorcery',
+  'aberrantMind',
+  'clockworkSoul',
+  'lunarSorcery',
+  'runeChild',
   // Warlock
-  | 'archfey'
-  | 'fiend'
-  | 'celestial'
-  | 'hexblade'
-  | 'undying'
-  | 'greatOldOne'
-  | 'fathomless'
-  | 'genie'
-  | 'undead'
+  'archfey',
+  'fiend',
+  'celestial',
+  'hexblade',
+  'undying',
+  'greatOldOne',
+  'fathomless',
+  'genie',
+  'undead',
   // Wizard
-  | 'abjuration'
-  | 'conjuration'
-  | 'divination'
-  | 'enchantment'
-  | 'evocation'
-  | 'illusion'
-  | 'necromancy'
-  | 'transmutation'
-  | 'warMagic'
-  | 'bladesinging'
-  | 'chronurgyMagic'
-  | 'graviturgyMagic'
-  | 'scribes'
-  | 'bloodMagic'
+  'abjuration',
+  'conjuration',
+  'divination',
+  'enchantment',
+  'evocation',
+  'illusion',
+  'necromancy',
+  'transmutation',
+  'warMagic',
+  'bladesinging',
+  'chronurgyMagic',
+  'graviturgyMagic',
+  'scribes',
+  'bloodMagic',
   // Artificer
-  | 'alchemist'
-  | 'armorer'
-  | 'artillerist'
-  | 'battleSmith'
+  'alchemist',
+  'armorer',
+  'artillerist',
+  'battleSmith',
+] as const
+
+/**
+ * 子職業 key（subclass；PHB / Xanathar's / Tasha's 全部官方子職業；
+ * wildMagicSorcerer 為避免與野蠻人 wildMagic 衝突而改名）
+ */
+export type SubclassKey = (typeof SUBCLASS_KEYS)[number]
 
 /** 各職業 SRD 生命骰（值為骰子面數） */
 export const CLASS_HIT_DICE: Readonly<Record<ClassKey, DieType>> = {

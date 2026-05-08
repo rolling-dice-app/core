@@ -4,14 +4,18 @@ export type MoralityKey = 'good' | 'neutral' | 'evil'
 /** 秩序軸（守序 / 中立 / 混亂） */
 export type OrderKey = 'lawful' | 'neutral' | 'chaotic'
 
+/** 九宮格陣營 key */
+export const ALIGNMENT_KEYS = [
+  'lawfulGood',
+  'neutralGood',
+  'chaoticGood',
+  'lawfulNeutral',
+  'trueNeutral',
+  'chaoticNeutral',
+  'lawfulEvil',
+  'neutralEvil',
+  'chaoticEvil',
+] as const
+
 /** 九宮格陣營 */
-export type AlignmentKey =
-  | 'lawfulGood'
-  | 'neutralGood'
-  | 'chaoticGood'
-  | 'lawfulNeutral'
-  | 'trueNeutral'
-  | 'chaoticNeutral'
-  | 'lawfulEvil'
-  | 'neutralEvil'
-  | 'chaoticEvil'
+export type AlignmentKey = (typeof ALIGNMENT_KEYS)[number]
