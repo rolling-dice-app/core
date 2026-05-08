@@ -20,18 +20,25 @@ Before any non-trivial change, read the org-level constitution documents:
 
 ## Mental model
 
-`core` defines the shared **domain language**. Two layers:
+`core` defines the shared **domain language**. Three layers:
 
-| Layer    | Purpose                              | Lives in    |
-| -------- | ------------------------------------ | ----------- |
-| `types/` | What the shared domain data is       | `src/types` |
-| `rules/` | How stable domain values are derived | `src/rules` |
+| Layer       | Purpose                                            | Lives in       |
+| ----------- | -------------------------------------------------- | -------------- |
+| `types/`    | What the shared domain data is                     | `src/types`    |
+| `rules/`    | How stable domain values are derived               | `src/rules`    |
+| `defaults/` | SRD-baseline starting values and default factories | `src/defaults` |
+
+`defaults/` follows the same pure / SRD-baseline contract as `rules/` (no
+framework imports, no I/O, no time/RNG, deterministic). The split is
+semantic: `rules/` answers "how is this value computed", `defaults/`
+answers "what is the SRD-baseline starting value when none is provided".
 
 In one sentence:
 
-> `core` defines what the shared domain data is and how stable domain values
-> are derived. `frontend` defines how the data is presented and interacted
-> with. `backend` defines who can access or persist the data.
+> `core` defines what the shared domain data is, how stable domain values
+> are derived, and what their SRD-baseline starting values look like.
+> `frontend` defines how the data is presented and interacted with.
+> `backend` defines who can access or persist the data.
 
 ## Allowed in `core`
 
@@ -54,6 +61,18 @@ In one sentence:
   `deriveMaxHitPoints`, `derivePassivePerception`, `deriveInitiative`, …
 - Internal lookup data (e.g. proficiency-bonus-by-level table) **only when a
   rule needs it as an implementation detail**, colocated with the rule.
+
+**`defaults/`**
+
+- SRD-baseline starting constants (e.g. `UNARMORED_AC_BASE`,
+  `DEFAULT_CURRENCY`) and pure factories that build the initial state of a
+  `core` entity (e.g. `createDefaultArmorClass`, `createDefaultInventory`,
+  `buildCharacterCreateDefaults`).
+- Layout: one file per domain (`character.ts`, future `combat.ts`,
+  `spell.ts`, …); the barrel `defaults/index.ts` re-exports each.
+- Same purity contract as `rules/`. Factories must return a fresh object
+  per call (do not leak shared references) and must not encode house-rule
+  policy — they construct the SRD-baseline starting shape, nothing more.
 
 ## Forbidden in `core`
 
@@ -130,6 +149,9 @@ core/
 │  │  └─ index.ts
 │  ├─ rules/
 │  │  └─ index.ts          # barrel; derive* functions land here
+│  ├─ defaults/
+│  │  ├─ character.ts      # SRD-baseline constants + default factories
+│  │  └─ index.ts          # barrel
 │  └─ index.ts             # root barrel
 ├─ .changeset/
 ├─ .github/workflows/
@@ -186,6 +208,17 @@ Do not invoke `pnpm changeset version` or `pnpm changeset publish` locally.
 4. Re-export through `src/rules/index.ts`.
 5. Changeset + commit.
 
+## Adding a new default
+
+1. Confirm the value is SRD-baseline and consumed across product surfaces
+   (i.e. both frontend and backend would otherwise duplicate it).
+2. Place it in `src/defaults/<domain>.ts` as a pure constant or pure
+   factory. Same purity contract as rules.
+3. Factories must return a fresh object per call — spread / clone any
+   `Readonly` constants they reference so callers can mutate safely.
+4. Re-export through `src/defaults/index.ts`.
+5. Changeset + commit.
+
 ## Responsibility checklist
 
 For any file you are about to add or move, run through these gates **in
@@ -205,10 +238,10 @@ order**. The first "no" tells you it does not belong in `core`.
    does not belong here.
 4. **Free of presentation concerns?** No display labels, i18n keys, select
    options, display order, form sections, page config, theming.
-5. **For rules only — pure?** Same input → same output, no mutable state,
-   no side effects, no `Date.now()` / `Math.random()`.
-6. **For rules only — SRD baseline?** Homebrew / house-rule variants stay
-   in consumers.
+5. **For rules / defaults only — pure?** Same input → same output, no
+   mutable state, no side effects, no `Date.now()` / `Math.random()`.
+6. **For rules / defaults only — SRD baseline?** Homebrew / house-rule
+   variants stay in consumers.
 
 If all six are "yes" → it belongs in `core`. Otherwise → it belongs to a
 consumer.

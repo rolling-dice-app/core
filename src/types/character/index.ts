@@ -1,4 +1,9 @@
 import type { AbilityKey } from '../dnd/ability-key.js'
+import type { AlignmentKey } from '../dnd/alignment.js'
+import type { ClassEntry } from '../dnd/class.js'
+import type { GenderKey } from '../dnd/gender.js'
+import type { SkillProficiencies } from '../dnd/skill.js'
+import type { CharacterAbilityScores } from './ability.js'
 import type { AttackEntry } from './attack.js'
 import type { CharacterFeature } from './feature.js'
 import type { CharacterInventory } from './inventory.js'
@@ -30,7 +35,53 @@ export interface Character
     CharacterCapabilities,
     CharacterInventory {
   id: string
+  /** 建立時間，ISO 8601 ms 精度 */
   createdAt: string
+  /** 最後更新時間，ISO 8601 ms 精度；同時作為 PATCH concurrency token */
+  updatedAt: string
+}
+
+/**
+ * 建立角色時由 client 提交的欄位集合。
+ * 對應使用者表單真正會填的 21 個欄位，不含 server 補的 defaults
+ * （avatar、armorClass、attacks、spells、features、inventory… 由
+ * `buildCharacterCreateDefaults` 產生）。
+ */
+export interface CharacterCreateInput {
+  name: string
+  gender: GenderKey | null
+  race: string | null
+  subrace: string | null
+  alignment: AlignmentKey | null
+  background: string | null
+  faith: string | null
+  age: number | null
+  height: string | null
+  weight: string | null
+  appearance: string | null
+  story: string | null
+  languages: string | null
+  tools: string | null
+  weaponProficiencies: string | null
+  armorProficiencies: string | null
+  classes: ClassEntry[]
+  abilities: CharacterAbilityScores
+  skills: SkillProficiencies
+  isJackOfAllTrades: boolean
+  isTough: boolean
+}
+
+/**
+ * 角色列表 payload；避免每次回傳完整 Character 的大型物件。
+ * `level` 為各職業等級總和，由 server 預先計算。
+ */
+export interface CharacterSummary {
+  id: string
+  name: string
+  classes: ClassEntry[]
+  level: number
+  avatar: string | null
+  updatedAt: string
 }
 
 export * from './ability.js'
