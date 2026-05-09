@@ -67,6 +67,17 @@ export interface CharacterCreateDTO {
   isTough: boolean
 }
 
+/** 編輯角色時 client 提交的 patch payload；以 section 為粒度局部更新，附 updatedAt 樂觀鎖 */
+export interface CharacterUpdateDTO {
+  /** 樂觀鎖；client 必須帶上目前 GET 拿到的 updatedAt */
+  updatedAt: string
+  profile?: Partial<CharacterProfile>
+  classes?: Partial<CharacterClasses>
+  stats?: Partial<CharacterStats>
+  capabilities?: Partial<CharacterCapabilities>
+  inventory?: Partial<CharacterInventory>
+}
+
 /** 角色列表 payload；level 為各職業等級總和，由 server 預先計算 */
 export interface CharacterSummaryDTO {
   id: string
