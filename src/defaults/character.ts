@@ -14,44 +14,38 @@ export const DEFAULT_CURRENCY: Readonly<CharacterCurrency> = {
 }
 
 /** 新建角色的初始護甲設定（無甲） */
-export function createDefaultArmorClass(): ArmorClassConfig {
-  return {
-    type: 'none',
-    value: UNARMORED_AC_BASE,
-    abilityKey: null,
-    shieldValue: 0,
-  }
-}
+export const createDefaultArmorClass = (): ArmorClassConfig => ({
+  type: 'none',
+  value: UNARMORED_AC_BASE,
+  abilityKey: null,
+  shieldValue: 0,
+})
 
 /** 新建角色的初始背包與貨幣；每次呼叫回傳獨立物件 */
-export function createDefaultInventory(): {
+export const createDefaultInventory = (): {
   items: InventoryItem[]
   currency: CharacterCurrency
-} {
-  return { items: [], currency: { ...DEFAULT_CURRENCY } }
-}
+} => ({ items: [], currency: { ...DEFAULT_CURRENCY } })
 
 /** 新建角色時非 CharacterCreateDTO 欄位的初始值；frontend mock 與 backend POST handler 共用 */
-export function buildCharacterCreateDefaults(): Omit<
+export const buildCharacterCreateDefaults = (): Omit<
   CharacterDTO,
   keyof CharacterCreateDTO | 'id' | 'createdAt' | 'updatedAt'
-> {
-  return {
-    savingThrowExtras: [],
-    armorClass: createDefaultArmorClass(),
-    customHpBonus: 0,
-    speedBonus: 0,
-    initiativeBonus: 0,
-    initiativeAbilityKey: null,
-    passivePerceptionBonus: 0,
-    passiveInsightBonus: 0,
-    attacks: [],
-    spellcastingAbilities: [],
-    customSpellcastingBonuses: {},
-    spells: [],
-    spellSlotsDelta: {},
-    pactSlotsDelta: {},
-    features: [],
-    ...createDefaultInventory(),
-  }
-}
+> => ({
+  savingThrowExtras: [],
+  armorClass: createDefaultArmorClass(),
+  customHpBonus: 0,
+  speedBonus: 0,
+  initiativeBonus: 0,
+  initiativeAbilityKey: null,
+  passivePerceptionBonus: 0,
+  passiveInsightBonus: 0,
+  attacks: [],
+  spellcastingAbilities: [],
+  customSpellcastingBonuses: {},
+  spells: [],
+  spellSlotsDelta: {},
+  pactSlotsDelta: {},
+  features: [],
+  ...createDefaultInventory(),
+})
