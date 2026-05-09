@@ -71,6 +71,7 @@ export interface CharacterCreateDTO {
 export interface CharacterSummaryDTO {
   id: string
   name: string
+  race: string | null
   classes: ClassEntry[]
   level: number
   avatar: string | null

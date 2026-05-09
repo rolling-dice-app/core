@@ -32,8 +32,13 @@ const character: CharacterDTO = {
 }
 ```
 
+**CharacterSummaryDTO 新增 `race: string | null`**
+
+列表 payload 補上種族欄位；server 端列表查詢需一併投影 `race`。
+
 **Consumer migration**
 
 - 全部 import 名字置換上述 5 個 type
 - backend POST `/characters` 加 `input.avatar ?? null` fallback
+- backend GET `/characters` 列表 select 加 `race`
 - frontend create form 若已支援 avatar 上傳，可將值放進 create payload
