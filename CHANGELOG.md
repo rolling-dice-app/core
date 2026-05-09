@@ -1,5 +1,15 @@
 # @rolling-dice-app/types
 
+## 4.1.0
+
+### Minor Changes
+
+- 6ed7852: feat(character): 新增 `CharacterUpdateDTO`，PATCH 角色 endpoint 共用契約。以 section 為粒度（`profile` / `classes` / `stats` / `capabilities` / `inventory`，各為 `Partial<...>`）局部更新，並要求 client 帶上 `updatedAt` 作為樂觀鎖 token。
+
+### Patch Changes
+
+- 6b775a8: refactor(defaults): 將 `createDefaultArmorClass` / `createDefaultInventory` / `buildCharacterCreateDefaults` 從 function declaration 改為 arrow function expression，統一程式風格。執行語意不變。
+
 ## 4.0.0
 
 ### Major Changes
