@@ -20,8 +20,8 @@ export interface DeathSaves {
   failures: number
 }
 
-/** 戰況追蹤資料；獨立於 Character 主資料，與 Character 1:1 */
-export interface CombatState {
+/** 戰況追蹤資料；獨立於 CharacterDTO，與其 1:1 */
+export interface CombatStateDTO {
   characterId: string
   hp: CombatHp
   /** 護甲等級臨時調整（疊加於基礎 AC） */

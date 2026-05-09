@@ -26,7 +26,7 @@ export type SourceKey =
   | 'XGE'
 
 /** 法術完整資料的跨邊界公開契約 */
-export interface SpellDto {
+export interface SpellDTO {
   id: string
   name: string
   engName: string

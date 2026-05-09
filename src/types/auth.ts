@@ -1,10 +1,6 @@
 /**
- * OAuth 登入流程結束後，後端會以 `?error=<code>` 將以下其中一個 code
- * 帶回前端 `/login` 頁。前端依 code 顯示對應人話訊息。
- *
- * 範圍限定為「OAuth redirect 通道」；HTTP API response body 的 error code
- * （VALIDATION_ERROR / UNAUTHORIZED_ERROR / RATE_LIMITED 等）屬於另一條
- * contract，不在此 union。
+ * OAuth redirect 通道的 error code union（後端以 `?error=<code>` 帶回前端）。
+ * HTTP body error code（VALIDATION_ERROR 等）屬另一條 contract，不在此 union。
  */
 export const OAUTH_ERROR_CODES = [
   'OAUTH_USER_DENIED',

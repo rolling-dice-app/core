@@ -17,11 +17,6 @@ export interface SpellEntry {
   isPrepared: boolean
   /** 是否被玩家標記為常用 */
   isFavorite: boolean
-  /**
-   * 法術來源職業（多職業情境下標記由哪個施法職業學得）。
-   *
-   * TODO: 目前以 optional 形式預留欄位，未強制填寫；待釐清「法術來源歸屬」
-   * 設計後改為必填並補既有資料 migration。詳見多職業 prepare limit 議題。
-   */
+  /** 法術來源職業；多職業情境標記由哪個施法職業學得（TODO: 待設計確定後改必填） */
   sourceClass?: ClassKey
 }

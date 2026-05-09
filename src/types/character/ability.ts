@@ -8,7 +8,7 @@ export interface AbilityScoreInput {
   race: number
 }
 
-/** 持久化於 Character 的屬性結構：origin + race + 後天 bonusScore */
+/** 持久化於 CharacterDTO 的屬性結構：origin + race + 後天 bonusScore */
 export interface AbilityScoreEntry extends AbilityScoreInput {
   /** 升級或冒險途中獲得的屬性提升 */
   bonusScore: number

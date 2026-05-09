@@ -26,8 +26,8 @@ export interface CharacterCapabilities {
   features: CharacterFeature[]
 }
 
-/** 完整角色資料；五個 section 的組合，加上識別與時間戳 */
-export interface Character
+/** 完整角色資料；profile / classes / stats / capabilities / inventory 五段組合，附識別與時間戳 */
+export interface CharacterDTO
   extends
     CharacterProfile,
     CharacterClasses,
@@ -41,13 +41,8 @@ export interface Character
   updatedAt: string
 }
 
-/**
- * 建立角色時由 client 提交的欄位集合。
- * 對應使用者表單真正會填的 21 個欄位，不含 server 補的 defaults
- * （avatar、armorClass、attacks、spells、features、inventory… 由
- * `buildCharacterCreateDefaults` 產生）。
- */
-export interface CharacterCreateInput {
+/** 建立角色時 client 提交的 payload；其餘欄位由 buildCharacterCreateDefaults 補 */
+export interface CharacterCreateDTO {
   name: string
   gender: GenderKey | null
   race: string | null
@@ -64,6 +59,7 @@ export interface CharacterCreateInput {
   tools: string | null
   weaponProficiencies: string | null
   armorProficiencies: string | null
+  avatar?: string | null
   classes: ClassEntry[]
   abilities: CharacterAbilityScores
   skills: SkillProficiencies
@@ -71,11 +67,8 @@ export interface CharacterCreateInput {
   isTough: boolean
 }
 
-/**
- * 角色列表 payload；避免每次回傳完整 Character 的大型物件。
- * `level` 為各職業等級總和，由 server 預先計算。
- */
-export interface CharacterSummary {
+/** 角色列表 payload；level 為各職業等級總和，由 server 預先計算 */
+export interface CharacterSummaryDTO {
   id: string
   name: string
   classes: ClassEntry[]

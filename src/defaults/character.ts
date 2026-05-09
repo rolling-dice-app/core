@@ -1,8 +1,8 @@
-import type { Character, CharacterCreateInput } from '../types/character/index.js'
+import type { CharacterDTO, CharacterCreateDTO } from '../types/character/index.js'
 import type { ArmorClassConfig } from '../types/character/attack.js'
 import type { CharacterCurrency, InventoryItem } from '../types/character/inventory.js'
 
-/** SRD 無甲基礎護甲值（10 + DEX mod 為 SRD baseline） */
+/** SRD 無甲基礎護甲值 */
 export const UNARMORED_AC_BASE = 10
 
 /** 新建角色的初始貨幣狀態 */
@@ -31,17 +31,12 @@ export function createDefaultInventory(): {
   return { items: [], currency: { ...DEFAULT_CURRENCY } }
 }
 
-/**
- * 建構 Character 中「不在 CharacterCreateInput」的 16 個欄位的初始值。
- * frontend mock-build 與 backend POST handler 共用，確保新建 character
- * 的預設狀態 source-of-truth 唯一。
- */
+/** 新建角色時非 CharacterCreateDTO 欄位的初始值；frontend mock 與 backend POST handler 共用 */
 export function buildCharacterCreateDefaults(): Omit<
-  Character,
-  keyof CharacterCreateInput | 'id' | 'createdAt' | 'updatedAt'
+  CharacterDTO,
+  keyof CharacterCreateDTO | 'id' | 'createdAt' | 'updatedAt'
 > {
   return {
-    avatar: null,
     savingThrowExtras: [],
     armorClass: createDefaultArmorClass(),
     customHpBonus: 0,
