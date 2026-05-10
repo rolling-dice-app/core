@@ -1,7 +1,7 @@
 import type { PlanLimits } from './plan-limits.js'
 
-/** 跨 frontend / backend 共用的使用者公開資料契約 */
-export interface UserDTO {
+/** 跨 frontend / backend 共用的使用者公開資料 sub-shape */
+export interface User {
   id: string
   email: string
   displayName: string
@@ -12,6 +12,6 @@ export interface UserDTO {
 
 /** GET /auth/me 回應；user 與 limits 並列 */
 export interface MeResponseDTO {
-  user: UserDTO
+  user: User
   limits: PlanLimits
 }
