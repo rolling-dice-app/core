@@ -10,8 +10,4 @@ export interface PlanLimits {
   maxActiveCharacters: number
   /** 每張卡冒險紀錄上限 */
   maxCampaignRecordsPerCharacter: number
-  /** 軟刪除保留天數 */
-  softDeleteRetentionDays: number
-  /** 還原後該卡不能再被軟刪除的冷卻天數 */
-  deleteCooldownAfterRestoreDays: number
 }
