@@ -27,3 +27,10 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxItemDescriptionLength: 500,
   maxFeatureDescriptionLength: 800,
 }
+
+/** 一般字串欄位字數上限（name / race / 短欄位）；純防 JSONB 塞爆 */
+export const COMMON_STRING_LENGTH_LIMIT = 100
+/** 長字串欄位字數上限（story / appearance / 列舉類）；純防 JSONB 塞爆 */
+export const LONG_STRING_LENGTH_LIMIT = 2000
+/** 一般 int 欄位防爆絕對值（applies as ±cap）；純防 JSONB 塞爆 */
+export const COMMON_INT_MAX_LIMIT = 999
