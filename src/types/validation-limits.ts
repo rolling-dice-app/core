@@ -6,6 +6,8 @@ export interface ValidationLimits {
   maxAttacksPerCharacter: number
   /** 單一角色可建立的特性條目數 */
   maxFeaturesPerCharacter: number
+  /** 單一角色可學習的法術數 */
+  maxLearnedSpellsPerCharacter: number
   /** 單一角色可建立的自訂法術數 */
   maxCustomSpellsPerCharacter: number
 
@@ -21,11 +23,14 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxItemsPerCharacter: 50,
   maxAttacksPerCharacter: 20,
   maxFeaturesPerCharacter: 40,
+  maxLearnedSpellsPerCharacter: 200,
   maxCustomSpellsPerCharacter: 20,
 
-  /** @deprecated 以下三項改用 `CHARACTER_TEXT_LIMITS` 限制；下一個 major 移除。 */
+  /** @deprecated 改用 `CHARACTER_TEXT_LIMITS` 限制；下一個 major 移除。 */
   maxCampaignRecordContentLength: 1000,
+  /** @deprecated 改用 `CHARACTER_TEXT_LIMITS` 限制；下一個 major 移除。 */
   maxItemDescriptionLength: 500,
+  /** @deprecated 改用 `CHARACTER_TEXT_LIMITS` 限制；下一個 major 移除。 */
   maxFeatureDescriptionLength: 800,
 }
 
