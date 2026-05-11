@@ -23,6 +23,7 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxFeaturesPerCharacter: 40,
   maxCustomSpellsPerCharacter: 20,
 
+  /** @deprecated 以下三項改用 `CHARACTER_TEXT_LIMITS` 限制；下一個 major 移除。 */
   maxCampaignRecordContentLength: 1000,
   maxItemDescriptionLength: 500,
   maxFeatureDescriptionLength: 800,
