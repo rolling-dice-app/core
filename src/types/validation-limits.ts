@@ -28,9 +28,22 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxFeatureDescriptionLength: 800,
 }
 
-/** 一般字串欄位字數上限（name / race / 短欄位）；純防 JSONB 塞爆 */
+/** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: item·feature / LONG: story·appearance）；純防 JSONB 塞爆 */
+export const CHARACTER_TEXT_LIMITS = {
+  TINY: 30,
+  SHORT: 100,
+  MEDIUM: 500,
+  LONG: 2000,
+} as const
+
+/** 角色 int 欄位防爆絕對值（applies as ±cap）；純防 JSONB 塞爆 */
+export const CHARACTER_INT_LIMITS = {
+  MAX: 999,
+} as const
+
+/** @deprecated 改用 `CHARACTER_TEXT_LIMITS.SHORT`；下一個 major 移除。 */
 export const COMMON_STRING_LENGTH_LIMIT = 100
-/** 長字串欄位字數上限（story / appearance / 列舉類）；純防 JSONB 塞爆 */
+/** @deprecated 改用 `CHARACTER_TEXT_LIMITS.LONG`；下一個 major 移除。 */
 export const LONG_STRING_LENGTH_LIMIT = 2000
-/** 一般 int 欄位防爆絕對值（applies as ±cap）；純防 JSONB 塞爆 */
+/** @deprecated 改用 `CHARACTER_INT_LIMITS.MAX`；下一個 major 移除。 */
 export const COMMON_INT_MAX_LIMIT = 999
