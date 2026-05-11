@@ -3,6 +3,7 @@
 export * from './auth.js'
 export * from './character/index.js'
 export * from './combat.js'
+export * from './combat-limits.js'
 export * from './dnd/index.js'
 export * from './plan-limits.js'
 export * from './spell.js'

@@ -41,3 +41,6 @@ export interface CombatStateDTO {
   deathSaves: DeathSaves
   updatedAt: string
 }
+
+/** CombatState 寫入時 consumer 提供的 body shape；不含 server-owned 欄位 */
+export type CombatStateBody = Omit<CombatStateDTO, 'characterId' | 'updatedAt'>
