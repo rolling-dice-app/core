@@ -44,3 +44,21 @@ export interface CombatStateDTO {
 
 /** CombatState 寫入時 consumer 提供的 body shape；不含 server-owned 欄位 */
 export type CombatStateBody = Omit<CombatStateDTO, 'characterId' | 'updatedAt'>
+
+/**
+ * CombatState PATCH 時 client 提交的 patch payload；
+ * Nested object/array 必須整個帶完整值（與 character section partial 一致：JSONB `||` 是 shallow merge）。
+ */
+export interface CombatStateUpdateDTO {
+  /** 樂觀鎖；client 必須帶上目前 GET 拿到的 updatedAt */
+  updatedAt: string
+  hp?: CombatHp
+  acAdjustment?: number
+  speedAdjustment?: number
+  savingThrowAdjustments?: Partial<Record<AbilityKey, number>>
+  featureUsesSpent?: Partial<Record<string, number>>
+  hitDiceUsed?: Partial<Record<ClassKey, number>>
+  spellSlotsUsed?: Partial<Record<SpellLevel, number>>
+  pactSlotsUsed?: Partial<Record<SpellLevel, number>>
+  deathSaves?: DeathSaves
+}
