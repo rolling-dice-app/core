@@ -1,5 +1,24 @@
 # @rolling-dice-app/types
 
+## 6.3.0
+
+### Minor Changes
+
+- b49be75: 新增 CombatState 相關共享型別、defaults 與 overflow guard 常數，並把死亡豁免門檻搬進 `rules/`：
+  - `CombatStateBody`（`types/combat.ts`）：`Omit<CombatStateDTO, 'characterId' | 'updatedAt'>`，給 frontend mock / backend POST·PATCH handler 共用。
+  - `buildCombatStateBodyDefaults()`（`defaults/combat.ts`）：純工廠，回傳 SRD-baseline 初始 body；每次呼叫回傳獨立物件。
+  - `COMBAT_STATE_LIMITS`（`types/combat-limits.ts`）：純防 JSONB 塞爆的欄位絕對值上限，量級沿用 `CHARACTER_INT_LIMITS`；不含 `deathSaves`、不含可推導的 `hp.current`。
+  - `DEATH_SAVE_THRESHOLD`（`rules/death-saves.ts`）：SRD 死亡豁免成功 / 失敗計數的判定門檻常數。
+
+### Patch Changes
+
+- f3bb0db: 標記 `VALIDATION_LIMITS` 三個 length 欄位為 `@deprecated`，下一個 major 一併移除。改用 `CHARACTER_TEXT_LIMITS` 分層常數：
+  - `maxCampaignRecordContentLength`（原 1000）
+  - `maxItemDescriptionLength`（原 500）
+  - `maxFeatureDescriptionLength`（原 800）
+
+  新欄位字數上限請依語意挑 `CHARACTER_TEXT_LIMITS.MEDIUM` (500) 或 `CHARACTER_TEXT_LIMITS.LONG` (2000)。
+
 ## 6.2.0
 
 ### Minor Changes
