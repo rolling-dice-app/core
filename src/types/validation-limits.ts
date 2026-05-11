@@ -38,12 +38,17 @@ export const CHARACTER_TEXT_LIMITS = {
 
 /** 角色 int 欄位防爆絕對值（applies as ±cap）；純防 JSONB 塞爆 */
 export const CHARACTER_INT_LIMITS = {
-  MAX: 999,
+  /** 小數值欄位絕對值上限 */
+  SMALL_INT_MAX: 99,
+  /** 一般數值欄位絕對值上限 */
+  GENERAL_INT_MAX: 999,
+  /** 大數值欄位絕對值上限 */
+  LARGE_INT_MAX: 999_999,
 } as const
 
 /** @deprecated 改用 `CHARACTER_TEXT_LIMITS.SHORT`；下一個 major 移除。 */
 export const COMMON_STRING_LENGTH_LIMIT = 100
 /** @deprecated 改用 `CHARACTER_TEXT_LIMITS.LONG`；下一個 major 移除。 */
 export const LONG_STRING_LENGTH_LIMIT = 2000
-/** @deprecated 改用 `CHARACTER_INT_LIMITS.MAX`；下一個 major 移除。 */
+/** @deprecated 改用 `CHARACTER_INT_LIMITS.GENERAL_INT_MAX`；下一個 major 移除。 */
 export const COMMON_INT_MAX_LIMIT = 999
