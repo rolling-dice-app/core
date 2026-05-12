@@ -20,7 +20,7 @@ export interface ValidationLimits {
 }
 
 export const VALIDATION_LIMITS: ValidationLimits = {
-  maxItemsPerCharacter: 50,
+  maxItemsPerCharacter: 100,
   maxAttacksPerCharacter: 20,
   maxFeaturesPerCharacter: 40,
   maxLearnedSpellsPerCharacter: 200,
