@@ -24,7 +24,8 @@
     "clean": "rm -rf dist",
     "type-check": "tsc -p tsconfig.json --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",

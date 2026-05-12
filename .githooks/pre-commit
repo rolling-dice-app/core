@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# Auto-format staged files with prettier, then re-stage.
+# Bypass with `git commit --no-verify` if needed.
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx|js|cjs|mjs|json|md|yml|yaml)$' || true)
+
+if [ -z "$staged" ]; then
+  exit 0
+fi
+
+echo "$staged" | xargs pnpm exec prettier --write --log-level=warn
+echo "$staged" | xargs git add
