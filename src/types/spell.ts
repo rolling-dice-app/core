@@ -44,3 +44,6 @@ export interface SpellDTO {
   classes: ClassKey[]
   desc: string
 }
+
+/** SpellDTO 內容部分（不含 id）；backend `spells.data` JSONB column 的型別來源，row PK 與 JSONB 不重複存 id */
+export type SpellRecord = Omit<SpellDTO, 'id'>

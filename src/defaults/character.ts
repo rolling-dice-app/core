@@ -1,12 +1,12 @@
-import type { CharacterDTO, CharacterCreateDTO } from '../types/character/index.js'
 import type { ArmorClassConfig } from '../types/character/attack.js'
-import type { CharacterCurrency, InventoryItem } from '../types/character/inventory.js'
+import type { CharacterCurrencyDTO } from '../types/character/currency.js'
+import type { CharacterDTO, CharacterCreateDTO } from '../types/character/index.js'
 
 /** SRD 無甲基礎護甲值 */
 export const UNARMORED_AC_BASE = 10
 
-/** 新建角色的初始貨幣狀態 */
-export const DEFAULT_CURRENCY: Readonly<CharacterCurrency> = {
+/** 新建角色的初始貨幣狀態；供 backend 在 character create tx 內 INSERT character_currency row 用 */
+export const DEFAULT_CURRENCY: Readonly<Omit<CharacterCurrencyDTO, 'updatedAt'>> = {
   cp: 0,
   sp: 0,
   gp: 0,
@@ -21,13 +21,7 @@ export const createDefaultArmorClass = (): ArmorClassConfig => ({
   shieldValue: 0,
 })
 
-/** 新建角色的初始背包與貨幣；每次呼叫回傳獨立物件 */
-export const createDefaultInventory = (): {
-  items: InventoryItem[]
-  currency: CharacterCurrency
-} => ({ items: [], currency: { ...DEFAULT_CURRENCY } })
-
-/** 新建角色時非 CharacterCreateDTO 欄位的初始值；frontend mock 與 backend POST handler 共用 */
+/** 新建角色時非 CharacterCreateDTO 欄位的初始值；frontend mock 與 backend POST handler 共用。spells / inventory items / currency 由各自 sub-resource 管理，不在此 */
 export const buildCharacterCreateDefaults = (): Omit<
   CharacterDTO,
   keyof CharacterCreateDTO | 'id' | 'createdAt' | 'updatedAt'
@@ -43,9 +37,7 @@ export const buildCharacterCreateDefaults = (): Omit<
   attacks: [],
   spellcastingAbilities: [],
   customSpellcastingBonuses: {},
-  spells: [],
   spellSlotsDelta: {},
   pactSlotsDelta: {},
   features: [],
-  ...createDefaultInventory(),
 })
