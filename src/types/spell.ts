@@ -1,29 +1,37 @@
 import type { ClassKey } from './dnd/class.js'
 
 /** 法術學派 */
-export type SpellSchool =
-  | 'abjuration'
-  | 'conjuration'
-  | 'divination'
-  | 'enchantment'
-  | 'evocation'
-  | 'illusion'
-  | 'necromancy'
-  | 'transmutation'
+export const SPELL_SCHOOLS = [
+  'abjuration',
+  'conjuration',
+  'divination',
+  'enchantment',
+  'evocation',
+  'illusion',
+  'necromancy',
+  'transmutation',
+] as const
+
+/** 法術學派 */
+export type SpellSchool = (typeof SPELL_SCHOOLS)[number]
 
 /** 法術出處 sourcebook 縮寫 */
-export type SourceKey =
-  | 'AAG'
-  | 'AI'
-  | 'BMT'
-  | 'EGW'
-  | 'FTD'
-  | 'GGR'
-  | 'PHB'
-  | 'SCC'
-  | 'TCE'
-  | 'TDCSR'
-  | 'XGE'
+export const SPELL_SOURCES = [
+  'AAG',
+  'AI',
+  'BMT',
+  'EGW',
+  'FTD',
+  'GGR',
+  'PHB',
+  'SCC',
+  'TCE',
+  'TDCSR',
+  'XGE',
+] as const
+
+/** 法術出處 sourcebook 縮寫 */
+export type SourceKey = (typeof SPELL_SOURCES)[number]
 
 /** 法術完整資料的跨邊界公開契約 */
 export interface SpellDTO {

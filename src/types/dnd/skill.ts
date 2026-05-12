@@ -34,5 +34,8 @@ export type ProficiencyLevel =
   | 'proficient' // 熟練
   | 'expertise' // 專精（加值翻倍）
 
+/** wire 上實際出現的熟練值（'none' 以 key 不存在表示，不入 wire） */
+export const SKILL_PROFICIENCY_VALUES = ['proficient', 'expertise'] as const
+
 /** 角色技能熟練度，僅記錄有熟練或專精的技能；'none' 以 key 不存在表示 */
-export type SkillProficiencies = Partial<Record<SkillKey, Exclude<ProficiencyLevel, 'none'>>>
+export type SkillProficiencies = Partial<Record<SkillKey, (typeof SKILL_PROFICIENCY_VALUES)[number]>>

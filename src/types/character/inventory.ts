@@ -1,8 +1,14 @@
 /** 物品類型 */
-export type ItemType = 'weapon' | 'armor' | 'consumable' | 'other'
+export const ITEM_TYPES = ['weapon', 'armor', 'consumable', 'other'] as const
+
+/** 物品類型 */
+export type ItemType = (typeof ITEM_TYPES)[number]
 
 /** 物品存放位置：一般背包或次元袋（不計入負重） */
-export type InventoryLocation = 'backpack' | 'dimensionalBag'
+export const INVENTORY_LOCATIONS = ['backpack', 'dimensionalBag'] as const
+
+/** 物品存放位置：一般背包或次元袋（不計入負重） */
+export type InventoryLocation = (typeof INVENTORY_LOCATIONS)[number]
 
 /** 背包物品條目；sub-endpoint 的唯一 wire shape */
 export interface InventoryItemDTO {

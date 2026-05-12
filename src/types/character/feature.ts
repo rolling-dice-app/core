@@ -1,8 +1,14 @@
 /** 特性來源分類 */
-export type FeatureSource = 'feat' | 'class' | 'race' | 'background' | 'other'
+export const FEATURE_SOURCES = ['feat', 'class', 'race', 'background', 'other'] as const
+
+/** 特性來源分類 */
+export type FeatureSource = (typeof FEATURE_SOURCES)[number]
 
 /** 特性次數恢復時機 */
-export type FeatureUsageRecovery = 'shortRest' | 'longRest' | 'manual'
+export const FEATURE_USAGE_RECOVERIES = ['shortRest', 'longRest', 'manual'] as const
+
+/** 特性次數恢復時機 */
+export type FeatureUsageRecovery = (typeof FEATURE_USAGE_RECOVERIES)[number]
 
 /** 特性使用次數設定（discriminated union） */
 export type FeatureUsage =

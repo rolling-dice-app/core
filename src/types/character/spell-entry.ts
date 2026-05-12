@@ -1,7 +1,10 @@
 import type { ClassKey } from '../dnd/class.js'
 
 /** 法術環級（1-9，戲法不計） */
-export type SpellLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+export const SPELL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const
+
+/** 法術環級（1-9，戲法不計） */
+export type SpellLevel = (typeof SPELL_LEVELS)[number]
 
 /** 各環級最大環位數；只記錄非 0 項 */
 export type SpellSlots = Partial<Record<SpellLevel, number>>
