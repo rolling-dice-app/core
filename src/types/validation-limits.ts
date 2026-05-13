@@ -24,7 +24,7 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxFeaturesPerCharacter: 40,
   maxLearnedSpellsPerCharacter: 200,
   maxCustomSpellsPerCharacter: 20,
-  maxCampaignRecordsPerCharacter: 200,
+  maxCampaignRecordsPerCharacter: 20,
   maxCampaignRecordContentLength: 2000,
   maxTeammatesPerCampaignRecord: 20,
 }
