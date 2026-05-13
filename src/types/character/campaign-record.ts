@@ -18,7 +18,10 @@ export interface CampaignRecordDTO {
   moneyEarning: CurrencyAmount
   /** 本場獲得的經驗值，絕對值上限 CHARACTER_INT_LIMITS.LARGE_INT_MAX */
   expEarning: number
-  /** 預留排序欄位；MVP 仍照 createdAt 排序 */
+  /**
+   * 預留排序欄位；MVP 仍照 createdAt 排序
+   * @deprecated 下個 major 版本移除，請改以 createdAt 排序
+   */
   sortOrder: number
   /** 建立時間，ISO 8601 ms 精度 */
   createdAt: string
