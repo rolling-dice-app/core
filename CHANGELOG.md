@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 8.1.0
+
+### Minor Changes
+
+- ac4c807: 新增 `MAX_DECIMAL_PRECISION = 1`：小數欄位允許的小數位數上限，供前後端共用驗證。
+
 ## 8.0.1
 
 ### Patch Changes
