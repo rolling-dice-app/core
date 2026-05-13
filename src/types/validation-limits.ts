@@ -37,6 +37,9 @@ export const CHARACTER_TEXT_LIMITS = {
   LONG: 2000,
 } as const
 
+/** 小數欄位允許的小數位數上限 */
+export const MAX_DECIMAL_PRECISION = 1
+
 /** 角色 int 欄位防爆絕對值（applies as ±cap）；純防 JSONB 塞爆 */
 export const CHARACTER_INT_LIMITS = {
   /** 小數值欄位絕對值上限 */
