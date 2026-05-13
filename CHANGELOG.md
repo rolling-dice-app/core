@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 8.2.0
+
+### Minor Changes
+
+- e60e298: Add spell-slot calculation rules: getSuggestedRegularSpellSlots, getSuggestedPactSlots, mergeSlots, computeSpellSlotMax. Migrated from frontend helpers ahead of backend wiring used <= max validation.
+
 ## 8.1.0
 
 ### Minor Changes
