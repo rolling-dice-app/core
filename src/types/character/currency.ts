@@ -4,20 +4,20 @@ export const CURRENCY_KEYS = ['cp', 'sp', 'gp', 'pp'] as const
 /** D&D 5e 四種貨幣 key */
 export type CurrencyKey = (typeof CURRENCY_KEYS)[number]
 
-/** 角色持有金錢；sub-endpoint 的唯一 wire shape */
-export interface CharacterCurrencyDTO {
+/** 純金錢 sub-shape；不含 updatedAt 等中繼欄位，可被其他 wire shape（如戰役紀錄獎勵）重用 */
+export interface CurrencyAmount {
   cp: number
   sp: number
   gp: number
   pp: number
+}
+
+/** 角色持有金錢；sub-endpoint 的唯一 wire shape */
+export interface CharacterCurrencyDTO extends CurrencyAmount {
   /** 最後更新時間，ISO 8601 ms 精度；同時作為 PATCH concurrency token */
   updatedAt: string
 }
 
 /** PATCH /characters/:id/currency body；updatedAt 樂觀鎖必填、其餘可選 */
-export type CharacterCurrencyUpdateBody = Pick<CharacterCurrencyDTO, 'updatedAt'> & {
-  cp?: number
-  sp?: number
-  gp?: number
-  pp?: number
-}
+export type CharacterCurrencyUpdateBody = Pick<CharacterCurrencyDTO, 'updatedAt'> &
+  Partial<CurrencyAmount>

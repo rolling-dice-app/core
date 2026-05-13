@@ -82,6 +82,7 @@ export interface CharacterSummaryDTO {
 
 export * from './ability.js'
 export * from './attack.js'
+export * from './campaign-record.js'
 export * from './currency.js'
 export * from './feature.js'
 export * from './inventory.js'
