@@ -1,5 +1,15 @@
 # @rolling-dice-app/types
 
+## 7.2.0
+
+### Minor Changes
+
+- 024523e: Add `CampaignRecordDTO` / `CampaignRecordCreateBody` / `CampaignRecordUpdateBody` and the shared `CurrencyAmount` sub-shape under `character/`. `CharacterCurrencyDTO` and `CharacterCurrencyUpdateBody` are refactored to compose `CurrencyAmount`; wire shape is unchanged. `VALIDATION_LIMITS` gains `maxCampaignRecordsPerCharacter` (200), `maxCampaignRecordContentLength` (2000), and `maxTeammatesPerCampaignRecord` (20).
+
+### Patch Changes
+
+- d3d01bc: Deprecate the OAuth redirect channel error-code contract: `OAUTH_ERROR_CODES`, `OAuthErrorCode`, and `isOAuthErrorCode` are now marked `@deprecated` and will be removed in the next major. Frontend error handling is moving to a unified policy where OAuth redirect errors are logged with the raw `?error=` value and the UI shows a single generic "please try again later" message instead of branching per code. No runtime or type-shape changes in this release.
+
 ## 7.1.0
 
 ### Minor Changes
