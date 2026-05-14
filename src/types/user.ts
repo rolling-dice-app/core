@@ -4,6 +4,8 @@ import type { PlanLimits } from './plan-limits.js'
 export interface UserPreference {
   /** 角色列表佈局 */
   characterListLayout: 'grid' | 'list'
+  /** 新增 campaign record 時是否同步把 moneyEarning 累加到角色 currency；缺欄位視為 true */
+  applyMoneyToCurrency?: boolean
 }
 
 /** 跨 frontend / backend 共用的使用者公開資料 sub-shape */

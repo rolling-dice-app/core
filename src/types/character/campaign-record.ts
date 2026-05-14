@@ -14,22 +14,17 @@ export interface CampaignRecordDTO {
   date: string
   /** 隊友名單；MVP 純人名（每筆 ≤ CHARACTER_TEXT_LIMITS.SHORT、長度 ≤ VALIDATION_LIMITS.maxTeammatesPerCampaignRecord），未來升級為 cross-user character link */
   teammates: string[]
-  /** 本場獲得的金錢；是否同步累加到 character currency 由 create 時的 applyMoneyToCurrency 旗標決定 */
+  /** 本場獲得的金錢；是否同步累加到 character currency 由 user.preference.applyMoneyToCurrency 決定 */
   moneyEarning: CurrencyAmount
   /** 本場獲得的經驗值，絕對值上限 CHARACTER_INT_LIMITS.LARGE_INT_MAX */
   expEarning: number
-  /**
-   * 預留排序欄位；MVP 仍照 createdAt 排序
-   * @deprecated 下個 major 版本移除，請改以 createdAt 排序
-   */
-  sortOrder: number
   /** 建立時間，ISO 8601 ms 精度 */
   createdAt: string
   /** 最後更新時間，ISO 8601 ms 精度；同時作為 PATCH concurrency token */
   updatedAt: string
 }
 
-/** POST /characters/:id/campaign-records body；characterId / sortOrder / 時間戳由 server 賦值 */
+/** POST /characters/:id/campaign-records body；characterId / 時間戳由 server 賦值 */
 export interface CampaignRecordCreateBody {
   title: string
   subtitle: string | null
@@ -39,8 +34,6 @@ export interface CampaignRecordCreateBody {
   teammates: string[]
   moneyEarning: CurrencyAmount
   expEarning: number
-  /** server-side 旗標：true 時同 tx 把 moneyEarning 累加到角色 currency；只在 create 時生效，update 不接受 */
-  applyMoneyToCurrency: boolean
 }
 
 /** PATCH /characters/:id/campaign-records/:recordId body；updatedAt 樂觀鎖必填、其餘可選。teammates 採整列 replace */
