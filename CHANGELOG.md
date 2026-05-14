@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 8.3.0
+
+### Minor Changes
+
+- be616e6: `CampaignRecordDTO.sortOrder` 標註 `@deprecated`，下個 major 版本移除；MVP 排序持續以 `createdAt` 為準，consumer 請改用 `createdAt`。
+
 ## 8.2.0
 
 ### Minor Changes
