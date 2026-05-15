@@ -14,6 +14,10 @@ export interface CharacterDTO
   createdAt: string
   /** 最後更新時間，ISO 8601 ms 精度；同時作為 PATCH concurrency token */
   updatedAt: string
+  /** 是否允許未登入者透過 shareId 公開讀取；切換走 PATCH /characters/:id/share */
+  shareable: boolean
+  /** 公開分享連結識別碼，形如 `chs_<22 字 URL-safe base64>`；角色建立時即生成，當前不提供輪替 */
+  shareId: string
 }
 
 /** 建立角色時 client 提交的 payload；其餘欄位由 buildCharacterCreateDefaults 補 */
