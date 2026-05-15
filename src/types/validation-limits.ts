@@ -16,6 +16,8 @@ export interface ValidationLimits {
   maxCampaignRecordContentLength: number
   /** 單筆戰役紀錄 teammates 陣列長度上限 */
   maxTeammatesPerCampaignRecord: number
+  /** 使用者暱稱字數上限 */
+  maxNicknameLength: number
 }
 
 export const VALIDATION_LIMITS: ValidationLimits = {
@@ -27,6 +29,7 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxCampaignRecordsPerCharacter: 20,
   maxCampaignRecordContentLength: 2000,
   maxTeammatesPerCampaignRecord: 20,
+  maxNicknameLength: 10,
 }
 
 /** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: item·feature / LONG: story·appearance）；純防 JSONB 塞爆 */
