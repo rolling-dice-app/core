@@ -29,7 +29,10 @@ export interface UserProfileUpdateDTO {
   updatedAt: string
 }
 
-/** 更新 avatar 的 payload；avatarUrl = null 表示清除 */
+/**
+ * 更新 avatar 的 payload；avatarUrl = null 表示清除
+ * @deprecated 由 POST/DELETE /users/me/avatar 取代；待下次 core major 一併移除
+ */
 export interface UserAvatarUpdateDTO {
   avatarUrl: string | null
   /** 樂觀鎖；client 必須帶上目前 GET 拿到的 updatedAt */
