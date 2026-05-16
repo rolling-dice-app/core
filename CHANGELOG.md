@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 9.3.0
+
+### Minor Changes
+
+- 69c2e71: `CHARACTER_TEXT_LIMITS` 新增 `ITEM`（800）層；item 文字欄位改用此層，feature 仍走 `MEDIUM`（500）。
+
 ## 9.2.0
 
 ### Minor Changes
