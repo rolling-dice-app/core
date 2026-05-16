@@ -32,11 +32,12 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxNicknameLength: 10,
 }
 
-/** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: item·feature / LONG: story·appearance）；純防 JSONB 塞爆 */
+/** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: feature / ITEM: item / LONG: story·appearance）；純防 JSONB 塞爆 */
 export const CHARACTER_TEXT_LIMITS = {
   TINY: 30,
   SHORT: 100,
   MEDIUM: 500,
+  ITEM: 800,
   LONG: 2000,
 } as const
 
