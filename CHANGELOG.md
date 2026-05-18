@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 9.4.0
+
+### Minor Changes
+
+- 12260d4: `CharacterSummaryDTO` 新增 `shareable` / `shareId`，對齊 `CharacterDTO` 的分享欄位語意。
+
 ## 9.3.0
 
 ### Minor Changes
