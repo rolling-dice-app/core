@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 9.5.0
+
+### Minor Changes
+
+- 09b4964: feat(types): CharacterDTO 與 CharacterSummaryDTO 新增 deletedAt 與 restoredAt，支援 character soft-delete restore 流程
+
 ## 9.4.1
 
 ### Patch Changes
