@@ -53,3 +53,9 @@ export const CHARACTER_INT_LIMITS = {
   /** 大數值欄位絕對值上限 */
   LARGE_INT_MAX: 999_999,
 } as const
+
+/** 軟刪除後進入 trash 至 GC 永久刪除的保留天數 */
+export const TRASH_RETENTION_DAYS = 7
+
+/** 軟刪除還原後，再次軟刪除的冷卻天數 */
+export const RESTORE_COOLDOWN_DAYS = 7
