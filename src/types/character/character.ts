@@ -18,6 +18,10 @@ export interface CharacterDTO
   shareable: boolean
   /** 公開分享連結識別碼，形如 `chs_<22 字 URL-safe base64>`；角色建立時即生成，當前不提供輪替 */
   shareId: string
+  /** 軟刪除時間，ISO 8601；null 表示目前為 active，非 null 表示在 trash 中 */
+  deletedAt: string | null
+  /** 最後一次還原時間，ISO 8601；非 null 且距今未超過 cooldown 時，server 拒絕再次軟刪除 */
+  restoredAt: string | null
 }
 
 /** 建立角色時 client 提交的 payload；其餘欄位由 buildCharacterCreateDefaults 補 */
@@ -69,4 +73,8 @@ export interface CharacterSummaryDTO {
   shareable: boolean
   /** 公開分享連結識別碼，形如 `chs_<22 字 URL-safe base64>`；角色建立時即生成，當前不提供輪替 */
   shareId: string
+  /** 軟刪除時間，ISO 8601；null 表示目前為 active，非 null 表示在 trash 中 */
+  deletedAt: string | null
+  /** 最後一次還原時間，ISO 8601；非 null 且距今未超過 cooldown 時，server 拒絕再次軟刪除 */
+  restoredAt: string | null
 }

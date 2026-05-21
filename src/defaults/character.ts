@@ -21,10 +21,17 @@ export const createDefaultArmorClass = (): ArmorClassConfig => ({
   shieldValue: 0,
 })
 
-/** 新建角色時非 CharacterCreateDTO 欄位的初始值；frontend mock 與 backend POST handler 共用。spells / inventory items / currency 由各自 sub-resource 管理，不在此 */
+/** 新建角色時非 CharacterCreateDTO 欄位的初始值；frontend mock 與 backend POST handler 共用。spells / inventory items / currency 由各自 sub-resource 管理，不在此；deletedAt / restoredAt 為 lifecycle 欄位，由 backend row state 直接帶出，不屬於 defaults */
 export const buildCharacterCreateDefaults = (): Omit<
   CharacterDTO,
-  keyof CharacterCreateDTO | 'id' | 'createdAt' | 'updatedAt' | 'shareable' | 'shareId'
+  | keyof CharacterCreateDTO
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'shareable'
+  | 'shareId'
+  | 'deletedAt'
+  | 'restoredAt'
 > => ({
   savingThrowExtras: [],
   armorClass: createDefaultArmorClass(),
