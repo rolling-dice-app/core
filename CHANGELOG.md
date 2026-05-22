@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 9.8.0
+
+### Minor Changes
+
+- e32bf72: refactor(types): `TeammatePreviewDTO.shareLink`（完整 URL）改為 `shareId`（chs\_ token），與其餘 share 介面一致；分享連結由前端依 shareId 自組。
+
 ## 9.7.0
 
 ### Minor Changes
