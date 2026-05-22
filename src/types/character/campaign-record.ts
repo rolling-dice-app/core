@@ -1,4 +1,5 @@
 import type { CurrencyAmount } from './currency.js'
+import type { TeammatePreviewDTO } from './teammate.js'
 
 /** 角色戰役紀錄；sub-endpoint 的唯一 wire shape */
 export interface CampaignRecordDTO {
@@ -12,8 +13,8 @@ export interface CampaignRecordDTO {
   content: string
   /** 發生日期，YYYY-MM-DD（無時間） */
   date: string
-  /** 隊友名單；MVP 純人名（每筆 ≤ CHARACTER_TEXT_LIMITS.SHORT、長度 ≤ VALIDATION_LIMITS.maxTeammatesPerCampaignRecord），未來升級為 cross-user character link */
-  teammates: string[]
+  /** 隊友名單（讀取形）；以 shareId 引用 shareable 角色卡，server hydrate 成預覽。長度 ≤ VALIDATION_LIMITS.maxTeammatesPerCampaignRecord。寫入請見 CampaignRecordCreateBody.teammates（shareId 陣列） */
+  teammates: TeammatePreviewDTO[]
   /** 本場獲得的金錢；是否同步累加到 character currency 由 user.preference.applyMoneyToCurrency 決定 */
   moneyEarning: CurrencyAmount
   /** 本場獲得的經驗值，絕對值上限 CHARACTER_INT_LIMITS.LARGE_INT_MAX */
@@ -30,17 +31,21 @@ export interface CampaignRecordCreateBody {
   subtitle: string | null
   content: string
   date: string
-  /** 預設空陣列，非 nullable */
+  /** 隊友 shareId 陣列（指向 shareable 角色卡）；預設空陣列，非 nullable。每筆須為合法 shareId 且 server 端再驗證有效性 */
   teammates: string[]
   moneyEarning: CurrencyAmount
   expEarning: number
 }
 
-/** PATCH /characters/:id/campaign-records/:recordId body；updatedAt 樂觀鎖必填、其餘可選。teammates 採整列 replace */
+/**
+ * PATCH /characters/:id/campaign-records/:recordId body；updatedAt 樂觀鎖必填、其餘可選。
+ * teammates 採整列 replace，型別為 shareId 陣列（與 CreateBody 一致，非讀取形 TeammatePreviewDTO[]）。
+ */
 export type CampaignRecordUpdateBody = Pick<CampaignRecordDTO, 'updatedAt'> &
   Partial<
     Pick<
       CampaignRecordDTO,
-      'title' | 'subtitle' | 'content' | 'date' | 'teammates' | 'moneyEarning' | 'expEarning'
+      'title' | 'subtitle' | 'content' | 'date' | 'moneyEarning' | 'expEarning'
     >
-  >
+  > &
+  Partial<{ teammates: string[] }>
