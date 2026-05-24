@@ -1,3 +1,4 @@
+// cspell:words COOLDOWN
 /** 通用輸入驗證上限；前後端共用值（zod schema 與 UI form 都用此值） */
 export interface ValidationLimits {
   /** 單一角色可持有的物品數 */
@@ -32,13 +33,14 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxNicknameLength: 10,
 }
 
-/** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: feature / ITEM: item / LONG: story·appearance）；純防 JSONB 塞爆 */
+/** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: feature / ITEM: item / LONG: story·appearance / HUGE: 超長文字欄位）；純防 JSONB 塞爆 */
 export const CHARACTER_TEXT_LIMITS = {
   TINY: 30,
   SHORT: 100,
   MEDIUM: 500,
   ITEM: 800,
   LONG: 2000,
+  HUGE: 5000,
 } as const
 
 /** 小數欄位允許的小數位數上限 */
