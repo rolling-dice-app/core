@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 9.9.0
+
+### Minor Changes
+
+- f9687bf: 新增 `CHARACTER_TEXT_LIMITS.HUGE = 5000`，作為比 `LONG (2000)` 更高的超長文字欄位通用層級。
+
 ## 9.8.0
 
 ### Minor Changes
