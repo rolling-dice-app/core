@@ -74,3 +74,30 @@ export interface SharedCharacterDTO {
   spells: SharedSpellEntryDTO[]
   ownerDisplayName: string
 }
+
+/**
+ * shareable 角色卡公開預覽。available=true 帶完整預覽；失效（owner 關了分享 / 角色已軟刪 / 不存在）
+ * 則 available=false、name/avatar/ownerDisplayName 為 null，仍保留 shareId 供 caller 標註。
+ */
+export interface SharedCharacterPreviewDTO {
+  /** 被連結角色卡的 shareId（chs_…）；含失效者亦回傳 */
+  shareId: string
+  /** 該 shareId 目前是否仍指向有效（存在 + shareable + 未軟刪）的角色卡 */
+  available: boolean
+  /** 僅 available=true 時有值 */
+  name: string | null
+  /** 僅 available=true 時有值 */
+  avatar: string | null
+  /** 僅 available=true 時有值 */
+  ownerDisplayName: string | null
+}
+
+/** POST /share/characters/resolve body；批次依 shareId 解析 shareable 角色卡公開預覽 */
+export interface ResolveSharedCharactersBody {
+  shareIds: string[]
+}
+
+/** POST /share/characters/resolve 回應；previews 順序與輸入一致 */
+export interface ResolveSharedCharactersResponse {
+  previews: SharedCharacterPreviewDTO[]
+}
