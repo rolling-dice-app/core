@@ -82,3 +82,20 @@ export type ApiErrorCode = (typeof API_ERROR_CODES)[number]
 
 export const isApiErrorCode = (value: unknown): value is ApiErrorCode =>
   typeof value === 'string' && (API_ERROR_CODES as readonly string[]).includes(value)
+
+/**
+ * Narrow union for plan-quota violations — codes a backend `PlanLimitExceededError`
+ * may carry. Explicit literal subset of {@link ApiErrorCode}; if any member is
+ * removed from `API_ERROR_CODES`, `Extract<>` drops it here so backend constructor
+ * call sites fail type-check rather than throwing a code that's no longer in the
+ * union.
+ *
+ * Validation-style limits (e.g. campaign-record length caps) are not plan limits
+ * and are intentionally excluded.
+ */
+export type PlanLimitErrorCode = Extract<
+  ApiErrorCode,
+  | 'ACTIVE_CHARACTER_LIMIT_REACHED'
+  | 'CHARACTER_TOTAL_LIMIT_REACHED'
+  | 'CAMPAIGN_RECORD_LIMIT_REACHED'
+>
