@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import type { ClassEntry, ClassKey, SubclassKey } from '../types/index.js'
-import { getSuggestedPactSlots, getSuggestedRegularSpellSlots } from './spell-slots.js'
+import type { ClassEntry, ClassKey, SubclassKey } from '../../src/types/index.js'
+import {
+  getSuggestedPactSlots,
+  getSuggestedRegularSpellSlots,
+} from '../../src/rules/spell-slots.js'
 
 const entry = (
   classKey: ClassKey,
