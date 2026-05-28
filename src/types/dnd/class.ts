@@ -36,7 +36,7 @@ export const SUBCLASS_KEYS = [
   'battlerager',
   'wildMagic',
   'giant',
-  'Juggernaut',
+  'juggernaut',
   // Bard
   'lore',
   'valor',

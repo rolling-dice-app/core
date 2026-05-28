@@ -11,16 +11,6 @@ export interface ValidationLimits {
   maxLearnedSpellsPerCharacter: number
   /** 單一角色可建立的自訂法術數 */
   maxCustomSpellsPerCharacter: number
-  /**
-   * 單一角色可建立的戰役紀錄數
-   * @deprecated 改讀 PlanLimits.maxCampaignRecordsPerCharacter，下個 major 移除
-   */
-  maxCampaignRecordsPerCharacter: number
-  /**
-   * 戰役紀錄 content 字數上限
-   * @deprecated 已決議 HUGE (5000) 為正解，下個 major 移除
-   */
-  maxCampaignRecordContentLength: number
   /** 單筆戰役紀錄 teammates 陣列長度上限 */
   maxTeammatesPerCampaignRecord: number
   /** 使用者暱稱字數上限 */
@@ -33,8 +23,6 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxFeaturesPerCharacter: 40,
   maxLearnedSpellsPerCharacter: 200,
   maxCustomSpellsPerCharacter: 20,
-  maxCampaignRecordsPerCharacter: 20,
-  maxCampaignRecordContentLength: 2000,
   maxTeammatesPerCampaignRecord: 20,
   maxNicknameLength: 10,
 }

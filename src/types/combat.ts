@@ -46,6 +46,16 @@ export interface CombatStateDTO {
 export type CombatStateBody = Omit<CombatStateDTO, 'characterId' | 'updatedAt'>
 
 /**
+ * 對 combat-state 做整包重置（short-rest / long-rest / reset）的請求 body；
+ * 三者程度不同但都是 replace-state 操作。對齊 PATCH /combat-state 攜帶 optimistic lock token，
+ * 避免 rest/reset 與 PATCH 並發互相覆蓋。
+ */
+export interface CombatResetBody {
+  /** 樂觀鎖；應等於目前 GET combat-state 拿到的 updatedAt */
+  expectedUpdatedAt: string
+}
+
+/**
  * CombatState PATCH 時 client 提交的 patch payload。
  * 只可省略未變更的 top-level key；一旦提供 nested object/array，該值會整包替換
  * （後端以 JSONB `||` 套用，shallow merge 不做 deep merge）。

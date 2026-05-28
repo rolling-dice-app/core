@@ -9,7 +9,7 @@ export interface CampaignRecordDTO {
   title: string
   /** 副標題，字數上限 CHARACTER_TEXT_LIMITS.SHORT */
   subtitle: string | null
-  /** 內文，字數上限 VALIDATION_LIMITS.maxCampaignRecordContentLength */
+  /** 內文，字數上限 CHARACTER_TEXT_LIMITS.HUGE */
   content: string
   /** 發生日期，YYYY-MM-DD（無時間） */
   date: string
