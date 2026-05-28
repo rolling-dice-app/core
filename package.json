@@ -1,6 +1,6 @@
 {
   "name": "@rolling-dice-app/core",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "description": "Shared domain core (types + pure DND rules) for the rolling-dice-app project, consumed by frontend and backend.",
   "license": "UNLICENSED",
   "type": "module",
