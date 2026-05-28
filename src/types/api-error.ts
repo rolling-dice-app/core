@@ -16,6 +16,7 @@
 export const API_ERROR_CODES = [
   // Generic 4xx
   'VALIDATION_ERROR',
+  'EMPTY_PATCH',
   'UNAUTHORIZED_ERROR',
   'FORBIDDEN_ERROR',
   'NOT_FOUND_ERROR',
@@ -27,6 +28,7 @@ export const API_ERROR_CODES = [
   'INTERNAL_ERROR',
   // Specific 404
   'USER_NOT_FOUND',
+  'CHARACTER_NOT_FOUND',
   'CAMPAIGN_RECORD_NOT_FOUND',
   'SPELL_NOT_FOUND',
   // Optimistic-lock failures (race)

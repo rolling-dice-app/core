@@ -8,9 +8,9 @@ import type {
   SubclassKey,
 } from '../types/index.js'
 
-type CasterCategory = 'full' | 'half' | 'third' | 'warlock' | 'none'
+type CasterCategory = 'full' | 'half' | 'half-roundUp' | 'third' | 'warlock' | 'none'
 
-/** 各職業的施法者分類；artificer 為 third-caster 但向上取整 */
+/** 各職業的施法者分類；artificer 為 round-up half-caster（Tasha errata） */
 const CASTER_CATEGORY: Readonly<Record<ClassKey, CasterCategory>> = {
   bard: 'full',
   cleric: 'full',
@@ -19,7 +19,7 @@ const CASTER_CATEGORY: Readonly<Record<ClassKey, CasterCategory>> = {
   wizard: 'full',
   paladin: 'half',
   ranger: 'half',
-  artificer: 'third',
+  artificer: 'half-roundUp',
   warlock: 'warlock',
   barbarian: 'none',
   fighter: 'none',
@@ -27,14 +27,19 @@ const CASTER_CATEGORY: Readonly<Record<ClassKey, CasterCategory>> = {
   rogue: 'none',
 }
 
-/** 子職業對施法者類別的覆寫；主職業 CASTER_CATEGORY 為 'none' 時才生效 */
-const SUBCLASS_CASTER_OVERRIDE: Readonly<Partial<Record<SubclassKey, CasterCategory>>> = {
-  eldritchKnight: 'third',
-  arcaneTrickster: 'third',
+/**
+ * 子職業對施法者類別的覆寫；以 (classKey, subclass) 雙鍵索引，避免子職業 key 漏配對到非法主職業。
+ * 例：`monk + eldritchKnight` 因 monk 下無 entry 而 fallback 到 monk 的 default `'none'`。
+ */
+const SUBCLASS_CASTER_OVERRIDE: Readonly<
+  Partial<Record<ClassKey, Partial<Record<SubclassKey, CasterCategory>>>>
+> = {
+  fighter: { eldritchKnight: 'third' },
+  rogue: { arcaneTrickster: 'third' },
 }
 
-/** 共用施法者環位表：index = effective level (1-20)，PHB p.113-115 */
-const SHARED_CASTER_SLOTS: readonly SpellSlots[] = [
+/** 全施法者環位表：index = level (1-20)，PHB p.113-115；亦作 multiclass effective-level 表 */
+const FULL_CASTER_SLOTS: readonly SpellSlots[] = [
   { 1: 2 },
   { 1: 3 },
   { 1: 4, 2: 2 },
@@ -57,8 +62,32 @@ const SHARED_CASTER_SLOTS: readonly SpellSlots[] = [
   { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1 },
 ]
 
+/** 半施法者環位表（向下取整）：paladin / ranger，PHB p.84 / p.110 */
+const HALF_CASTER_FLOOR_SLOTS: readonly SpellSlots[] = [
+  {}, // lv1：尚無環位
+  { 1: 2 },
+  { 1: 3 },
+  { 1: 3 },
+  { 1: 4, 2: 2 },
+  { 1: 4, 2: 2 },
+  { 1: 4, 2: 3 },
+  { 1: 4, 2: 3 },
+  { 1: 4, 2: 3, 3: 2 },
+  { 1: 4, 2: 3, 3: 2 },
+  { 1: 4, 2: 3, 3: 3 },
+  { 1: 4, 2: 3, 3: 3 },
+  { 1: 4, 2: 3, 3: 3, 4: 1 },
+  { 1: 4, 2: 3, 3: 3, 4: 1 },
+  { 1: 4, 2: 3, 3: 3, 4: 2 },
+  { 1: 4, 2: 3, 3: 3, 4: 2 },
+  { 1: 4, 2: 3, 3: 3, 4: 3, 5: 1 },
+  { 1: 4, 2: 3, 3: 3, 4: 3, 5: 1 },
+  { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+]
+
 /** Warlock pact magic 表：index = warlock level (1-20)，PHB p.107 */
-const WARLOCK_SLOT_TABLE: readonly { count: number; level: SpellLevel }[] = [
+const PACT_MAGIC_SLOTS: readonly { count: number; level: SpellLevel }[] = [
   { count: 1, level: 1 },
   { count: 2, level: 1 },
   { count: 2, level: 2 },
@@ -84,39 +113,71 @@ const WARLOCK_SLOT_TABLE: readonly { count: number; level: SpellLevel }[] = [
 const SPELL_LEVELS: readonly SpellLevel[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const SLOT_MAX = 9
 
-const resolveCategory = (entry: ClassEntry): CasterCategory => {
-  const base = CASTER_CATEGORY[entry.classKey]
-  if (base !== 'none') return base
-  if (entry.subclass === null) return 'none'
-  return SUBCLASS_CASTER_OVERRIDE[entry.subclass] ?? 'none'
+const fullSlotsAt = (level: number): SpellSlots => {
+  if (level < 1 || level > 20) return {}
+  return { ...FULL_CASTER_SLOTS[level - 1] }
 }
 
-/** 一般施法者建議環位（全 / 半 / 三分之一合併計算）；artificer 向上取整，其他 third-caster 向下取整 */
-export const getSuggestedRegularSpellSlots = (classes: readonly ClassEntry[]): SpellSlots => {
-  let fullLevels = 0
-  let halfLevels = 0
-  let thirdNonArtificerLevels = 0
-  let artificerLevels = 0
+const halfFloorSlotsAt = (level: number): SpellSlots => {
+  if (level < 1 || level > 20) return {}
+  return { ...HALF_CASTER_FLOOR_SLOTS[level - 1] }
+}
 
-  for (const entry of classes) {
-    if (entry.level <= 0) continue
+/** Single-class caster → slot table 查詢；warlock 走 getSuggestedPactSlots，不在此表 */
+const SINGLE_CLASS_SLOT_LOOKUP: Partial<Record<ClassKey, (level: number) => SpellSlots>> = {
+  bard: (l) => fullSlotsAt(l),
+  cleric: (l) => fullSlotsAt(l),
+  druid: (l) => fullSlotsAt(l),
+  sorcerer: (l) => fullSlotsAt(l),
+  wizard: (l) => fullSlotsAt(l),
+  paladin: (l) => halfFloorSlotsAt(l),
+  ranger: (l) => halfFloorSlotsAt(l),
+  artificer: (l) => fullSlotsAt(Math.ceil(l / 2)),
+}
+
+const resolveCategory = (entry: ClassEntry): CasterCategory => {
+  const override =
+    entry.subclass !== null ? SUBCLASS_CASTER_OVERRIDE[entry.classKey]?.[entry.subclass] : undefined
+  return override ?? CASTER_CATEGORY[entry.classKey]
+}
+
+/**
+ * 一般施法者建議環位。
+ * Single-class caster（bard/cleric/druid/sorcerer/wizard/paladin/ranger/artificer）走專表；
+ * 多 caster 混班走 PHB p.165 multiclass effective-level 公式（paladin/ranger sum-then-halve，
+ * artificer sum-then-roundUp，其他 third sum-then-floor）。
+ */
+export const getSuggestedRegularSpellSlots = (classes: readonly ClassEntry[]): SpellSlots => {
+  const active = classes.filter((c) => c.level > 0)
+
+  if (active.length === 1) {
+    const only = active[0]!
+    const lookup = SINGLE_CLASS_SLOT_LOOKUP[only.classKey]
+    if (lookup) return lookup(only.level)
+    // 主職業非 caster 但 subclass 是 third-caster (EK/AT) 等情況 → 走下方 multiclass 公式
+  }
+
+  let fullLevels = 0
+  let halfFloorLevels = 0
+  let halfRoundUpLevels = 0
+  let thirdLevels = 0
+
+  for (const entry of active) {
     const category = resolveCategory(entry)
     if (category === 'full') fullLevels += entry.level
-    else if (category === 'half') halfLevels += entry.level
-    else if (category === 'third') {
-      if (entry.classKey === 'artificer') artificerLevels += entry.level
-      else thirdNonArtificerLevels += entry.level
-    }
+    else if (category === 'half') halfFloorLevels += entry.level
+    else if (category === 'half-roundUp') halfRoundUpLevels += entry.level
+    else if (category === 'third') thirdLevels += entry.level
   }
 
   const effectiveLevel =
     fullLevels +
-    Math.floor(halfLevels / 2) +
-    Math.floor(thirdNonArtificerLevels / 3) +
-    Math.ceil(artificerLevels / 3)
+    Math.floor(halfFloorLevels / 2) +
+    Math.ceil(halfRoundUpLevels / 2) +
+    Math.floor(thirdLevels / 3)
 
   if (effectiveLevel < 1 || effectiveLevel > 20) return {}
-  return { ...SHARED_CASTER_SLOTS[effectiveLevel - 1] }
+  return { ...FULL_CASTER_SLOTS[effectiveLevel - 1] }
 }
 
 /** 契術師 pact magic 建議環位；多次契術師等級加總後查表 */
@@ -128,7 +189,7 @@ export const getSuggestedPactSlots = (classes: readonly ClassEntry[]): SpellSlot
   }
 
   if (warlockLevels < 1 || warlockLevels > 20) return {}
-  const pact = WARLOCK_SLOT_TABLE[warlockLevels - 1]
+  const pact = PACT_MAGIC_SLOTS[warlockLevels - 1]
   if (!pact) return {}
   return { [pact.level]: pact.count }
 }

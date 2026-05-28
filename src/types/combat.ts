@@ -46,8 +46,9 @@ export interface CombatStateDTO {
 export type CombatStateBody = Omit<CombatStateDTO, 'characterId' | 'updatedAt'>
 
 /**
- * CombatState PATCH 時 client 提交的 patch payload；
- * Nested object/array 必須整個帶完整值（與 character section partial 一致：JSONB `||` 是 shallow merge）。
+ * CombatState PATCH 時 client 提交的 patch payload。
+ * 只可省略未變更的 top-level key；一旦提供 nested object/array，該值會整包替換
+ * （後端以 JSONB `||` 套用，shallow merge 不做 deep merge）。
  */
 export interface CombatStateUpdateDTO {
   /** 樂觀鎖；client 必須帶上目前 GET 拿到的 updatedAt */
