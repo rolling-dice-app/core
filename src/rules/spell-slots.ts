@@ -110,6 +110,17 @@ const PACT_MAGIC_SLOTS: readonly { count: number; level: SpellLevel }[] = [
   { count: 4, level: 5 },
 ]
 
+/**
+ * 多職 effective-level 計算時各施法者分類的等級除數；full = 1（不取整）。
+ * 取整方向不在此決定，而由主職（ceil）/ 兼職（floor）位置決定。
+ */
+const CASTER_DIVISOR: Partial<Record<CasterCategory, number>> = {
+  full: 1,
+  half: 2,
+  'half-roundUp': 2,
+  third: 3,
+}
+
 const SPELL_LEVELS: readonly SpellLevel[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const SLOT_MAX = 9
 
@@ -144,8 +155,9 @@ const resolveCategory = (entry: ClassEntry): CasterCategory => {
 /**
  * 一般施法者建議環位。
  * Single-class caster（bard/cleric/druid/sorcerer/wizard/paladin/ranger/artificer）走專表；
- * 多 caster 混班走 PHB p.165 multiclass effective-level 公式（paladin/ranger sum-then-halve，
- * artificer sum-then-roundUp，其他 third sum-then-floor）。
+ * 多 caster 混班走 effective-level 公式，逐 class 依位置取整再加總：
+ * 主職業（`classes[0]`，與 hp.ts 一致）施法等級向上取整，其餘兼職向下取整，
+ * full caster 除數為 1 不受取整影響。詳見 CLAUDE.md permissive interpretations catalogue。
  */
 export const getSuggestedRegularSpellSlots = (classes: readonly ClassEntry[]): SpellSlots => {
   const active = classes.filter((c) => c.level > 0)
@@ -157,24 +169,15 @@ export const getSuggestedRegularSpellSlots = (classes: readonly ClassEntry[]): S
     // 主職業非 caster 但 subclass 是 third-caster (EK/AT) 等情況 → 走下方 multiclass 公式
   }
 
-  let fullLevels = 0
-  let halfFloorLevels = 0
-  let halfRoundUpLevels = 0
-  let thirdLevels = 0
-
-  for (const entry of active) {
-    const category = resolveCategory(entry)
-    if (category === 'full') fullLevels += entry.level
-    else if (category === 'half') halfFloorLevels += entry.level
-    else if (category === 'half-roundUp') halfRoundUpLevels += entry.level
-    else if (category === 'third') thirdLevels += entry.level
+  let effectiveLevel = 0
+  for (const [index, entry] of classes.entries()) {
+    if (entry.level <= 0) continue
+    const divisor = CASTER_DIVISOR[resolveCategory(entry)]
+    if (divisor === undefined) continue // warlock / none
+    const fraction = entry.level / divisor
+    // 主職（陣列首項）向上取整，兼職向下取整
+    effectiveLevel += index === 0 ? Math.ceil(fraction) : Math.floor(fraction)
   }
-
-  const effectiveLevel =
-    fullLevels +
-    Math.floor(halfFloorLevels / 2) +
-    Math.ceil(halfRoundUpLevels / 2) +
-    Math.floor(thirdLevels / 3)
 
   if (effectiveLevel < 1 || effectiveLevel > 20) return {}
   return { ...FULL_CASTER_SLOTS[effectiveLevel - 1] }

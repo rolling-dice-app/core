@@ -22,12 +22,13 @@ describe('getSuggestedRegularSpellSlots — C1 subclass-override class scope', (
   })
 
   it('fighter + eldritchKnight stays third-caster (override fires)', () => {
-    // fighter 主職業 'none'，subclass override → 'third'，走 multiclass third 公式 floor(5/3) = 1
-    expect(getSuggestedRegularSpellSlots([entry('fighter', 5, 'eldritchKnight')])).toEqual({ 1: 2 })
+    // fighter 主職業 'none'，subclass override → 'third'，單職走 multiclass 公式；
+    // 主職向上取整 ceil(5/3) = 2 → full[1] = {1:3}，對齊 PHB 單職三階施法者表
+    expect(getSuggestedRegularSpellSlots([entry('fighter', 5, 'eldritchKnight')])).toEqual({ 1: 3 })
   })
 
   it('rogue + arcaneTrickster stays third-caster', () => {
-    expect(getSuggestedRegularSpellSlots([entry('rogue', 5, 'arcaneTrickster')])).toEqual({ 1: 2 })
+    expect(getSuggestedRegularSpellSlots([entry('rogue', 5, 'arcaneTrickster')])).toEqual({ 1: 3 })
   })
 
   it('wizard + bladesinging keeps full caster (override 不影響已 caster 的主職業)', () => {
@@ -87,7 +88,7 @@ describe('getSuggestedRegularSpellSlots — C3 multiclass artificer round-up hal
     })
   })
 
-  it('paladin 2 + ranger 2 → effective 2 (permissive sum-then-halve: floor(4/2))', () => {
+  it('paladin 2 + ranger 2 → effective 2 (主職 ceil(2/2)=1 + 兼職 floor(2/2)=1)', () => {
     expect(getSuggestedRegularSpellSlots([entry('paladin', 2), entry('ranger', 2)])).toEqual({
       1: 3,
     })
@@ -105,6 +106,39 @@ describe('getSuggestedRegularSpellSlots — C3 multiclass artificer round-up hal
     expect(getSuggestedRegularSpellSlots([entry('artificer', 4), entry('paladin', 4)])).toEqual({
       1: 4,
       2: 3,
+    })
+  })
+})
+
+describe('getSuggestedRegularSpellSlots — C4 主職 ceil / 兼職 floor 位置取整', () => {
+  it('paladin(主) 5 + wizard 5 → effective 8 (ceil(5/2)=3 + full 5)', () => {
+    expect(getSuggestedRegularSpellSlots([entry('paladin', 5), entry('wizard', 5)])).toEqual({
+      1: 4,
+      2: 3,
+      3: 3,
+      4: 2,
+    })
+  })
+
+  it('wizard(主) 5 + artificer 3 → effective 6 (full 5 + 兼職 floor(3/2)=1；artificer 兼職改 floor)', () => {
+    expect(getSuggestedRegularSpellSlots([entry('wizard', 5), entry('artificer', 3)])).toEqual({
+      1: 4,
+      2: 3,
+      3: 3,
+    })
+  })
+
+  it('paladin(主) 5 + ranger 3 → effective 4 (ceil(5/2)=3 + floor(3/2)=1)', () => {
+    expect(getSuggestedRegularSpellSlots([entry('paladin', 5), entry('ranger', 3)])).toEqual({
+      1: 4,
+      2: 3,
+    })
+  })
+
+  it('single-class eldritchKnight lv7 → {1:4,2:2} (主職 ceil(7/3)=3，對齊 PHB 單職三階表)', () => {
+    expect(getSuggestedRegularSpellSlots([entry('fighter', 7, 'eldritchKnight')])).toEqual({
+      1: 4,
+      2: 2,
     })
   })
 })
