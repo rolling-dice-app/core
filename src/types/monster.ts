@@ -72,8 +72,6 @@ export interface MonsterTemplateDTO {
   id: string
   /** 擁有者（DM）的 user id */
   userId: string
-  /** 列表排序值 */
-  sortOrder: number
   /** 建立時間，ISO 8601 ms 精度 */
   createdAt: string
   /** 最後更新時間，ISO 8601 ms 精度；同時作為 PATCH concurrency token */
@@ -90,7 +88,6 @@ export interface MonsterTemplateSummaryDTO {
   challengeRating: string | null
   ac: number
   hp: number
-  sortOrder: number
 }
 
 /** 建立怪物模板時 client 提交的 payload；只 name 必填，其餘由 buildMonsterTemplateCreateDefaults 補 */
