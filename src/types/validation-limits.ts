@@ -15,6 +15,12 @@ export interface ValidationLimits {
   maxTeammatesPerCampaignRecord: number
   /** 使用者暱稱字數上限 */
   maxNicknameLength: number
+  /** 單一怪物模板可建立的攻擊條目數 */
+  maxAttacksPerMonsterTemplate: number
+  /** 單一怪物模板可建立的特性條目數 */
+  maxFeaturesPerMonsterTemplate: number
+  /** 單一攻擊內傷害條目（damageDice）行數上限；角色與怪物攻擊共用 */
+  maxDamageDicePerAttack: number
 }
 
 export const VALIDATION_LIMITS: ValidationLimits = {
@@ -25,6 +31,9 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxCustomSpellsPerCharacter: 20,
   maxTeammatesPerCampaignRecord: 20,
   maxNicknameLength: 10,
+  maxAttacksPerMonsterTemplate: 10,
+  maxFeaturesPerMonsterTemplate: 10,
+  maxDamageDicePerAttack: 10,
 }
 
 /** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: feature / ITEM: item / LONG: story·appearance / HUGE: 超長文字欄位）；純防 JSONB 塞爆 */
