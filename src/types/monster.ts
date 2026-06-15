@@ -76,8 +76,6 @@ export interface MonsterTemplateDTO {
   createdAt: string
   /** 最後更新時間，ISO 8601 ms 精度；同時作為 PATCH concurrency token */
   updatedAt: string
-  /** 軟刪除時間，ISO 8601；null 表示目前為 active，非 null 表示已軟刪除（無 restore） */
-  deletedAt: string | null
 }
 
 /** 怪物模板列表 payload；輕量子集，不含 attacks / features 等重陣列 */
