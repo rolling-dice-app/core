@@ -10,4 +10,6 @@ export interface PlanLimits {
   maxActiveCharacters: number
   /** 每張卡冒險紀錄上限 */
   maxCampaignRecordsPerCharacter: number
+  /** 怪物模板上限（計未刪除列；無 restore，不拆 active/total） */
+  maxMonsterTemplates: number
 }
