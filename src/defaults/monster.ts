@@ -11,16 +11,10 @@ export const MONSTER_DEFAULT_HP = 1
 /** 新建怪物的預設屬性分數 */
 export const MONSTER_DEFAULT_ABILITY_SCORE = 10
 
-/** 新建怪物時非 MonsterTemplateCreateBody 欄位的初始值；frontend mock 與 backend POST handler 共用。id / userId / sortOrder / 時間戳 / deletedAt 由 backend row state 帶出，不屬 defaults */
+/** 新建怪物時非 MonsterTemplateCreateBody 欄位的初始值；frontend mock 與 backend POST handler 共用。id / userId / 時間戳 / deletedAt 由 backend row state 帶出，不屬 defaults */
 export const buildMonsterTemplateCreateDefaults = (): Omit<
   MonsterTemplateDTO,
-  | keyof MonsterTemplateCreateBody
-  | 'id'
-  | 'userId'
-  | 'sortOrder'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'deletedAt'
+  keyof MonsterTemplateCreateBody | 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deletedAt'
 > => ({
   size: null,
   alignment: null,
