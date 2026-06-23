@@ -24,6 +24,7 @@ export const SPELL_SOURCES = [
   'FTD',
   'GGR',
   'PHB',
+  'SATO',
   'SCC',
   'TCE',
   'TDCSR',
