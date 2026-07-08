@@ -88,10 +88,9 @@ export interface MonsterTemplateSummaryDTO {
   hp: number
 }
 
-/** 建立怪物模板時 client 提交的 payload；只 name 必填，其餘由 buildMonsterTemplateCreateDefaults 補 */
-export interface MonsterTemplateCreateBody {
-  name: string
-}
+/** 建立怪物模板時 client 提交的 payload；name 必填，其餘業務欄位 optional，缺漏由 buildMonsterTemplateCreateDefaults 補 */
+export type MonsterTemplateCreateBody = Pick<MonsterTemplateDTO, 'name'> &
+  Partial<Omit<MonsterTemplateDTO, 'name' | 'id' | 'userId' | 'createdAt' | 'updatedAt'>>
 
 /** 編輯怪物模板時 client 提交的 patch payload；附 updatedAt 樂觀鎖，業務欄位皆 optional 局部更新 */
 export type MonsterTemplateUpdateBody = Pick<MonsterTemplateDTO, 'updatedAt'> &
