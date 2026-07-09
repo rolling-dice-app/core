@@ -21,6 +21,12 @@ export interface ValidationLimits {
   maxFeaturesPerMonsterTemplate: number
   /** 單一攻擊內傷害條目（damageDice）行數上限；角色與怪物攻擊共用 */
   maxDamageDicePerAttack: number
+  /** 單一團務容器 members（常駐名單）陣列長度上限 */
+  maxMembersPerDmSessionContainer: number
+  /** 單筆團務紀錄 members（出席名單）陣列長度上限 */
+  maxMembersPerDmSessionLog: number
+  /** 單筆團務紀錄 itemRewards 陣列長度上限 */
+  maxItemRewardsPerDmSessionLog: number
 }
 
 export const VALIDATION_LIMITS: ValidationLimits = {
@@ -34,6 +40,9 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxAttacksPerMonsterTemplate: 10,
   maxFeaturesPerMonsterTemplate: 10,
   maxDamageDicePerAttack: 10,
+  maxMembersPerDmSessionContainer: 10,
+  maxMembersPerDmSessionLog: 10,
+  maxItemRewardsPerDmSessionLog: 100,
 }
 
 /** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: feature / ITEM: item / LONG: story·appearance / HUGE: 超長文字欄位）；純防 JSONB 塞爆 */

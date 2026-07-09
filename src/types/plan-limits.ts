@@ -12,4 +12,8 @@ export interface PlanLimits {
   maxCampaignRecordsPerCharacter: number
   /** 怪物模板上限（計未刪除列；無 restore，不拆 active/total） */
   maxMonsterTemplates: number
+  /** 團務容器上限（計未刪除列；無 restore，不拆 active/total） */
+  maxDmSessionContainers: number
+  /** 每個團務容器旗下的團務紀錄上限 */
+  maxDmSessionLogsPerContainer: number
 }

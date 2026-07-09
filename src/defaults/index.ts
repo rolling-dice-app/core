@@ -1,3 +1,5 @@
 export * from './character.js'
 export * from './combat.js'
+export * from './dm-session-container.js'
+export * from './dm-session-log.js'
 export * from './monster.js'
