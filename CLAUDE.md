@@ -282,6 +282,18 @@ Do not invoke `pnpm changeset version` or `pnpm changeset publish` locally.
 7. `pnpm changeset` (patch / minor / major).
 8. Commit source change + changeset together.
 
+### Inline entry ids (embedded list entries)
+
+Entries embedded in JSONB arrays (attacks, features, damage dice, rewards,
+…) carry an `id` that is **client-generated** (`crypto.randomUUID()` on the
+frontend). The backend only validates it (length ≤ 64, unique within the
+array) — it never assigns or rewrites one. Rationale: these arrays are
+persisted by whole-array replace, so the id exists purely for list
+reconciliation; server-side assignment would add a diff/mapping round-trip
+with no integrity gain. When adding a new embedded-entry type, follow the
+same convention and use the JSDoc one-liner「行內穩定識別（client 生成）」
+(see `MonsterAttackEntry.id`, `DmSessionLogItemReward.id`).
+
 ## Adding a new rule
 
 1. Confirm it implements a mechanic from one of the accepted published
