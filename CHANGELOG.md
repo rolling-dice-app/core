@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 11.8.0
+
+### Minor Changes
+
+- c88c3b0: 新增 m7.2 團務紀錄的 API error codes：`DM_SESSION_CONTAINER_NOT_FOUND`、`DM_SESSION_LOG_NOT_FOUND`、`STALE_DM_SESSION_CONTAINER_VERSION`、`STALE_DM_SESSION_LOG_VERSION`、`DM_SESSION_CONTAINER_LIMIT_REACHED`、`DM_SESSION_LOG_LIMIT_REACHED`、`DM_SESSION_MEMBER_SHARE_ID_INVALID`；`PlanLimitErrorCode` union 納入兩個 DM session plan-limit codes。
+
 ## 11.7.0
 
 ### Minor Changes
