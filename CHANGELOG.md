@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 11.7.0
+
+### Minor Changes
+
+- 3831b88: Add m7.2 DM session contract: `DmSessionContainerDTO` (owner-scoped container grouping session logs by scenario / player group, with shared member shapes `DmSessionMemberDTO` / `DmSessionMemberInput`) and `DmSessionLogDTO` as its sub-resource (`containerId`-linked), each with summary / create / update shapes, `buildDmSessionContainerCreateDefaults` / `buildDmSessionLogCreateDefaults`, plus `PlanLimits.maxDmSessionContainers` / `maxDmSessionLogsPerContainer` and validation limits `maxMembersPerDmSessionContainer` / `maxMembersPerDmSessionLog` / `maxItemRewardsPerDmSessionLog`.
+
 ## 11.6.0
 
 ### Minor Changes
