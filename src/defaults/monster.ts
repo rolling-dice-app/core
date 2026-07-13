@@ -36,8 +36,11 @@ export const buildMonsterTemplateCreateDefaults = (): Omit<
   damageResistances: null,
   damageImmunities: null,
   conditionImmunities: null,
+  damageModifiers: {},
+  conditionImmunityKeys: [],
   senses: null,
   languages: null,
   attacks: [],
   features: [],
+  remark: null,
 })

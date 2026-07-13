@@ -1,5 +1,8 @@
 import type { AbilityKey } from './dnd/ability-key.js'
 import type { AlignmentKey } from './dnd/alignment.js'
+import type { ConditionKey } from './dnd/condition.js'
+import type { DamageModifierKey } from './dnd/damage-modifier.js'
+import type { DamageTypeKey } from './dnd/damage-type.js'
 import type { SizeKey } from './dnd/size.js'
 import type { SkillKey } from './dnd/skill.js'
 import type { DamageDieEntry } from './character/attack.js'
@@ -52,14 +55,30 @@ export interface MonsterTemplateDTO {
   savingThrows: Partial<Record<AbilityKey, number>>
   /** 技能加值；只列有的，存 flat 加值 */
   skills: Partial<Record<SkillKey, number>>
-  /** 傷害易傷；自由文字 */
+  /**
+   * 傷害易傷；自由文字
+   * @deprecated 改用 damageModifiers（下個 major 移除）
+   */
   damageVulnerabilities: string | null
-  /** 傷害抗性；自由文字 */
+  /**
+   * 傷害抗性；自由文字
+   * @deprecated 改用 damageModifiers（下個 major 移除）
+   */
   damageResistances: string | null
-  /** 傷害免疫；自由文字 */
+  /**
+   * 傷害免疫；自由文字
+   * @deprecated 改用 damageModifiers（下個 major 移除）
+   */
   damageImmunities: string | null
-  /** 狀態免疫；自由文字 */
+  /**
+   * 狀態免疫；自由文字
+   * @deprecated 改用 conditionImmunityKeys（下個 major 移除）
+   */
   conditionImmunities: string | null
+  /** 傷害調整；每傷害類型單一互斥狀態，只列有的。條件式例外（如「非魔法攻擊」）寫 remark */
+  damageModifiers: Partial<Record<DamageTypeKey, DamageModifierKey>>
+  /** 狀態免疫；key 不重複 */
+  conditionImmunityKeys: ConditionKey[]
   /** 感官（含被動察覺）；自由文字 */
   senses: string | null
   /** 語言；自由文字 */
@@ -68,6 +87,8 @@ export interface MonsterTemplateDTO {
   attacks: MonsterAttackEntry[]
   /** 特性 / 動作條目 */
   features: MonsterFeature[]
+  /** 備註；自由文字，承接結構化欄位表達不了的內容（條件式抗性、DM 註記等） */
+  remark: string | null
   /** 唯一識別 */
   id: string
   /** 擁有者（DM）的 user id */
@@ -112,9 +133,12 @@ export type MonsterTemplateUpdateBody = Pick<MonsterTemplateDTO, 'updatedAt'> &
       | 'damageResistances'
       | 'damageImmunities'
       | 'conditionImmunities'
+      | 'damageModifiers'
+      | 'conditionImmunityKeys'
       | 'senses'
       | 'languages'
       | 'attacks'
       | 'features'
+      | 'remark'
     >
   >
