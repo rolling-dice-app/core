@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 11.10.0
+
+### Minor Changes
+
+- c0ac86a: DmSessionContainerSummaryDTO 新增 nextSession 欄位（DmSessionLogSummaryDTO | null）；server 帶出的唯讀衍生欄位，指向下一場團務，無場次可指時為 null
+
 ## 11.9.0
 
 ### Minor Changes
