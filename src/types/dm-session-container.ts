@@ -43,6 +43,7 @@ export interface DmSessionContainerSummaryDTO {
   id: string
   title: string
   members: Pick<DmSessionMemberDTO, 'playerName'>[]
+  nextSession: DmSessionLogSummaryDTO | null
   createdAt: string
 }
 
