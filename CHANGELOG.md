@@ -1,5 +1,11 @@
 # @rolling-dice-app/types
 
+## 11.10.1
+
+### Patch Changes
+
+- fcac92c: Deprecate `CharacterSummaryDTO.level`. Clients should derive the total level from `classes`; the field will be removed in the next major. Doc-only change — no type or runtime impact.
+
 ## 11.10.0
 
 ### Minor Changes
