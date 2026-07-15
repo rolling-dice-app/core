@@ -60,12 +60,13 @@ export interface CharacterUpdateDTO {
   capabilities?: Partial<CharacterCapabilities>
 }
 
-/** 角色列表 payload；level 為各職業等級總和，由 server 預先計算 */
+/** 角色列表 payload */
 export interface CharacterSummaryDTO {
   id: string
   name: string
   race: string | null
   classes: ClassEntry[]
+  /** @deprecated 前端請由 classes 自行加總；下次 major 移除 */
   level: number
   avatar: string | null
   updatedAt: string
