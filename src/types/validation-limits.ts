@@ -19,7 +19,7 @@ export interface ValidationLimits {
   maxAttacksPerMonsterTemplate: number
   /** 單一怪物模板可建立的特性條目數 */
   maxFeaturesPerMonsterTemplate: number
-  /** 單一攻擊內傷害條目（damageDice）行數上限；角色與怪物攻擊共用 */
+  /** 單一攻擊內傷害條目（damageDice）行數上限；角色／怪物／戰場單位攻擊共用 */
   maxDamageDicePerAttack: number
   /** 單一團務容器 members（常駐名單）陣列長度上限 */
   maxMembersPerDmSessionContainer: number
@@ -31,6 +31,8 @@ export interface ValidationLimits {
   maxUnitsPerBattlefield: number
   /** 單一戰場單位 conditions 陣列長度上限（= ConditionKey 全集數，一 key 一條的天然上限） */
   maxConditionsPerBattlefieldUnit: number
+  /** 單一戰場單位 attacks 陣列長度上限（= 角色攻擊 cap，快照不截斷） */
+  maxAttacksPerBattlefieldUnit: number
 }
 
 export const VALIDATION_LIMITS: ValidationLimits = {
@@ -49,6 +51,7 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxItemRewardsPerDmSessionLog: 100,
   maxUnitsPerBattlefield: 50,
   maxConditionsPerBattlefieldUnit: 15,
+  maxAttacksPerBattlefieldUnit: 20,
 }
 
 /** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: feature / ITEM: item / LONG: story·appearance / HUGE: 超長文字欄位）；純防 JSONB 塞爆 */

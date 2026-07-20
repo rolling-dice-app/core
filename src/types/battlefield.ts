@@ -1,3 +1,5 @@
+import type { DamageDieEntry } from './character/attack.js'
+import type { DeathSaves } from './combat.js'
 import type { ClassEntry } from './dnd/class.js'
 import type { ConditionKey } from './dnd/condition.js'
 
@@ -15,6 +17,20 @@ export interface BattlefieldCondition {
   key: ConditionKey
   /** 狀態備注，字數上限 CHARACTER_TEXT_LIMITS.SHORT；未填為 null */
   note: string | null
+}
+
+/** 戰場單位攻擊快照條目；命中為 flat 總值（角色快照時已含屬性/熟練攤平、怪物從模板原樣搬），傷害復用 DamageDieEntry，供前端自動擲骰取數 */
+export interface BattlefieldAttackEntry {
+  /** 行內穩定識別（client 生成，比照 MonsterAttackEntry） */
+  id: string
+  /** 攻擊名稱，字數上限 CHARACTER_TEXT_LIMITS.SHORT */
+  name: string
+  /** 命中加值（flat 總值），絕對值上限 BATTLEFIELD_LIMITS.UNIT_ATTACK_HIT_BONUS_ABS_MAX */
+  hitBonus: number
+  /** 傷害條目；行數上限 VALIDATION_LIMITS.maxDamageDicePerAttack */
+  damageDice: DamageDieEntry[]
+  /** 補充說明（觸發條件、附加效果等），字數上限 CHARACTER_TEXT_LIMITS.SHORT；未填以 null 表示 */
+  comment: string | null
 }
 
 /** 戰場單位 HP 子結構；欄位語意比照 CombatHp，惟 current 非 null（單位建立即滿血，無「未開始追蹤」狀態） */
@@ -57,14 +73,16 @@ export interface BattlefieldUnit {
   maxHp: number
   /** HP 變動值（當前／臨時／最大調整） */
   hp: BattlefieldUnitHp
+  /** 死亡豁免計數；前端僅於 HP 0 時顯示／計數（比照 combat：HP ≥ 1 歸零） */
+  deathSaves: DeathSaves
   /** 快照基準 AC，範圍 0..BATTLEFIELD_LIMITS.UNIT_AC_MAX */
   ac: number
   /** AC 臨時調整（疊加於 ac 快照），絕對值上限 BATTLEFIELD_LIMITS.UNIT_AC_ADJUSTMENT_ABS_MAX */
   acAdjustment: number
-  /** 速度雙欄之一：角色單位存前端計算後數值（呎，0..BATTLEFIELD_LIMITS.UNIT_SPEED_VALUE_MAX）；怪物／無值為 null */
-  speedValue: number | null
-  /** 速度雙欄之二：怪物單位保留模板 speed 字串原樣（如 "30 ft., fly 60 ft."），字數上限 CHARACTER_TEXT_LIMITS.SHORT；角色／無值為 null */
-  speedText: string | null
+  /** 速度（自由文字，可編輯），字數上限 CHARACTER_TEXT_LIMITS.SHORT；角色快照時前端寫入計算值文字、怪物從模板 speed 原樣搬（如 "30 ft., fly 60 ft."）、adhoc 手填；未填為 null */
+  speed: string | null
+  /** 攻擊快照；長度 ≤ VALIDATION_LIMITS.maxAttacksPerBattlefieldUnit；角色／怪物加入時由來源快照，adhoc 為空陣列起步 */
+  attacks: BattlefieldAttackEntry[]
   /** 先攻加值，絕對值上限 BATTLEFIELD_LIMITS.UNIT_INITIATIVE_BONUS_ABS_MAX */
   initiativeBonus: number
   /** 先攻值，絕對值上限 BATTLEFIELD_LIMITS.UNIT_INITIATIVE_ABS_MAX；未擲為 null */
