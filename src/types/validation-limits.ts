@@ -27,6 +27,10 @@ export interface ValidationLimits {
   maxMembersPerDmSessionLog: number
   /** 單筆團務紀錄 itemRewards 陣列長度上限 */
   maxItemRewardsPerDmSessionLog: number
+  /** 單一戰場 units 陣列長度上限 */
+  maxUnitsPerBattlefield: number
+  /** 單一戰場單位 conditions 陣列長度上限（= ConditionKey 全集數，一 key 一條的天然上限） */
+  maxConditionsPerBattlefieldUnit: number
 }
 
 export const VALIDATION_LIMITS: ValidationLimits = {
@@ -43,6 +47,8 @@ export const VALIDATION_LIMITS: ValidationLimits = {
   maxMembersPerDmSessionContainer: 10,
   maxMembersPerDmSessionLog: 10,
   maxItemRewardsPerDmSessionLog: 100,
+  maxUnitsPerBattlefield: 50,
+  maxConditionsPerBattlefieldUnit: 15,
 }
 
 /** 角色文字欄位字數上限分層（TINY: tag / SHORT: name·race / MEDIUM: feature / ITEM: item / LONG: story·appearance / HUGE: 超長文字欄位）；純防 JSONB 塞爆 */
