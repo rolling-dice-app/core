@@ -66,8 +66,6 @@ export interface CharacterSummaryDTO {
   name: string
   race: string | null
   classes: ClassEntry[]
-  /** @deprecated 前端請由 classes 自行加總；下次 major 移除 */
-  level: number
   avatar: string | null
   updatedAt: string
   /** 是否允許未登入者透過 shareId 公開讀取；切換走 PATCH /characters/:id/share */
