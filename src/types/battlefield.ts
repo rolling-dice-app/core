@@ -47,7 +47,7 @@ export interface BattlefieldUnitHp {
  * 戰場參戰單位（JSONB 內嵌條目，非獨立資源）。加入戰場時把角色卡／怪物模板
  * 計算完成的值快照為基準（maxHp / ac / 速度），之後與來源互不同步、不回寫；
  * 戰鬥中的變動比照 combat-state 設計走調整值欄位（hp.maxAdjustment /
- * acAdjustment），有效值由前端計算，backend 不參與數值計算，
+ * acAdjustment / speedAdjustment），有效值由前端計算，backend 不參與數值計算，
  * 只驗形狀與防爆 caps，不驗跨欄位遊戲不變量。
  */
 export interface BattlefieldUnit {
@@ -79,8 +79,10 @@ export interface BattlefieldUnit {
   ac: number
   /** AC 臨時調整（疊加於 ac 快照），絕對值上限 BATTLEFIELD_LIMITS.UNIT_AC_ADJUSTMENT_ABS_MAX */
   acAdjustment: number
-  /** 速度（自由文字，可編輯），字數上限 CHARACTER_TEXT_LIMITS.SHORT；角色快照時前端寫入計算值文字、怪物從模板 speed 原樣搬（如 "30 ft., fly 60 ft."）、adhoc 手填；未填為 null */
-  speed: string | null
+  /** 速度快照（呎；建立時定格、不可變），範圍 0..BATTLEFIELD_LIMITS.UNIT_SPEED_MAX；角色寫前端計算值、怪物搬模板 speed、adhoc 手填；未知為 null */
+  speed: number | null
+  /** 速度臨時調整（疊加於 speed 快照），絕對值上限 BATTLEFIELD_LIMITS.UNIT_SPEED_ADJUSTMENT_ABS_MAX；speed 為 null 時無意義（前端不提供調整） */
+  speedAdjustment: number
   /** 攻擊快照；長度 ≤ VALIDATION_LIMITS.maxAttacksPerBattlefieldUnit；角色／怪物加入時由來源快照，adhoc 為空陣列起步 */
   attacks: BattlefieldAttackEntry[]
   /** 先攻加值，絕對值上限 BATTLEFIELD_LIMITS.UNIT_INITIATIVE_BONUS_ABS_MAX */
