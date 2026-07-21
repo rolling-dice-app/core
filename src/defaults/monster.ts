@@ -11,6 +11,9 @@ export const MONSTER_DEFAULT_HP = 1
 /** 新建怪物的預設屬性分數 */
 export const MONSTER_DEFAULT_ABILITY_SCORE = 10
 
+/** 新建怪物的預設速度（呎）；PHB 多數中型人形生物步行速度 30 呎 */
+export const MONSTER_DEFAULT_SPEED = 30
+
 /** 新建怪物時 client 未帶欄位的初始值；backend POST handler 以 body 覆蓋此結果。id / userId / 時間戳 由 backend row state 帶出，不屬 defaults */
 export const buildMonsterTemplateCreateDefaults = (): Omit<
   MonsterTemplateDTO,
@@ -21,7 +24,7 @@ export const buildMonsterTemplateCreateDefaults = (): Omit<
   challengeRating: null,
   ac: MONSTER_DEFAULT_AC,
   hp: MONSTER_DEFAULT_HP,
-  speed: '',
+  speed: MONSTER_DEFAULT_SPEED,
   initiativeBonus: 0,
   abilities: ABILITY_KEYS.reduce(
     (acc, key) => {
@@ -32,10 +35,6 @@ export const buildMonsterTemplateCreateDefaults = (): Omit<
   ),
   savingThrows: {},
   skills: {},
-  damageVulnerabilities: null,
-  damageResistances: null,
-  damageImmunities: null,
-  conditionImmunities: null,
   damageModifiers: {},
   conditionImmunityKeys: [],
   senses: null,

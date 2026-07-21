@@ -45,8 +45,8 @@ export interface MonsterTemplateDTO {
   ac: number
   /** 生命值最大值 */
   hp: number
-  /** 速度；自由文字（如 "30 ft., fly 60 ft."） */
-  speed: string
+  /** 速度（呎；單一絕對數值），多模式速度（飛行、攀爬等）寫 remark */
+  speed: number
   /** 先攻加值（flat 絕對值） */
   initiativeBonus: number
   /** 六屬性分數（flat，不套 AbilityScoreEntry） */
@@ -55,26 +55,6 @@ export interface MonsterTemplateDTO {
   savingThrows: Partial<Record<AbilityKey, number>>
   /** 技能加值；只列有的，存 flat 加值 */
   skills: Partial<Record<SkillKey, number>>
-  /**
-   * 傷害易傷；自由文字
-   * @deprecated 改用 damageModifiers（下個 major 移除）
-   */
-  damageVulnerabilities: string | null
-  /**
-   * 傷害抗性；自由文字
-   * @deprecated 改用 damageModifiers（下個 major 移除）
-   */
-  damageResistances: string | null
-  /**
-   * 傷害免疫；自由文字
-   * @deprecated 改用 damageModifiers（下個 major 移除）
-   */
-  damageImmunities: string | null
-  /**
-   * 狀態免疫；自由文字
-   * @deprecated 改用 conditionImmunityKeys（下個 major 移除）
-   */
-  conditionImmunities: string | null
   /** 傷害調整；每傷害類型單一互斥狀態，只列有的。條件式例外（如「非魔法攻擊」）寫 remark */
   damageModifiers: Partial<Record<DamageTypeKey, DamageModifierKey>>
   /** 狀態免疫；key 不重複 */
@@ -129,10 +109,6 @@ export type MonsterTemplateUpdateBody = Pick<MonsterTemplateDTO, 'updatedAt'> &
       | 'abilities'
       | 'savingThrows'
       | 'skills'
-      | 'damageVulnerabilities'
-      | 'damageResistances'
-      | 'damageImmunities'
-      | 'conditionImmunities'
       | 'damageModifiers'
       | 'conditionImmunityKeys'
       | 'senses'
