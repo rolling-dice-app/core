@@ -2,6 +2,7 @@ import type { DamageDieEntry } from './character/attack.js'
 import type { DeathSaves } from './combat.js'
 import type { ClassEntry } from './dnd/class.js'
 import type { ConditionKey } from './dnd/condition.js'
+import type { SkillKey } from './dnd/skill.js'
 
 /** 戰場單位種類；character = 角色卡快照、monster = 怪物模板實例、adhoc = 手動臨時單位 */
 export type BattlefieldUnitKind = 'character' | 'monster' | 'adhoc'
@@ -85,6 +86,8 @@ export interface BattlefieldUnit {
   speedAdjustment: number
   /** 攻擊快照；長度 ≤ VALIDATION_LIMITS.maxAttacksPerBattlefieldUnit；角色／怪物加入時由來源快照，adhoc 為空陣列起步 */
   attacks: BattlefieldAttackEntry[]
+  /** 技能加值快照（flat 總值，供前端自動擲骰取數）；monster 從模板 skills 原樣搬、character 加入時只快照熟練或有調整的技能攤平總值、adhoc 為空物件；單值絕對值上限 BATTLEFIELD_LIMITS.UNIT_SKILL_BONUS_ABS_MAX */
+  skills: Partial<Record<SkillKey, number>>
   /** 先攻加值，絕對值上限 BATTLEFIELD_LIMITS.UNIT_INITIATIVE_BONUS_ABS_MAX */
   initiativeBonus: number
   /** 先攻值，絕對值上限 BATTLEFIELD_LIMITS.UNIT_INITIATIVE_ABS_MAX；未擲為 null */
