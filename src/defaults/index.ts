@@ -1,3 +1,4 @@
+export * from './battlefield.js'
 export * from './character.js'
 export * from './combat.js'
 export * from './dm-session-container.js'
