@@ -51,9 +51,15 @@ export interface MonsterTemplateDTO {
   initiativeBonus: number
   /** 六屬性分數（flat，不套 AbilityScoreEntry） */
   abilities: Record<AbilityKey, number>
-  /** 豁免加值；只列有的，存 flat 加值（怪物不吃熟練加值） */
+  /**
+   * 豁免加值；只列有的，存 flat 加值（怪物不吃熟練加值）。
+   * 未列出者以該屬性的調整值為準（非 0）—— 明確的 `0` 與未列出是不同的值。
+   */
   savingThrows: Partial<Record<AbilityKey, number>>
-  /** 技能加值；只列有的，存 flat 加值 */
+  /**
+   * 技能加值；只列有的，存 flat 加值。
+   * fallback 規則同 savingThrows：未列出者用該技能對應屬性的調整值，明確的 `0` 不等於未列出。
+   */
   skills: Partial<Record<SkillKey, number>>
   /** 傷害調整；每傷害類型單一互斥狀態，只列有的。條件式例外（如「非魔法攻擊」）寫 remark */
   damageModifiers: Partial<Record<DamageTypeKey, DamageModifierKey>>
