@@ -92,7 +92,10 @@ export interface BattlefieldUnit {
   initiativeBonus: number
   /** 先攻值，絕對值上限 BATTLEFIELD_LIMITS.UNIT_INITIATIVE_ABS_MAX；未擲為 null */
   initiative: number | null
-  /** 先攻軌顯示順序（0..BATTLEFIELD_LIMITS.UNIT_SORT_ORDER_MAX）；擲骰後自動重排，拖曳為手動覆蓋 */
+  /**
+   * 先攻軌顯示順序（0..BATTLEFIELD_LIMITS.UNIT_SORT_ORDER_MAX）；入場時依序給號，排在現有參戰單位之後。
+   * 只由拖曳／上下移與「依先攻重排」更新 —— 先攻值變動不觸發重排，排序控制權在 DM 手上。
+   */
   sortOrder: number
   /** 狀態列表；長度 ≤ VALIDATION_LIMITS.maxConditionsPerBattlefieldUnit */
   conditions: BattlefieldCondition[]
@@ -111,13 +114,16 @@ export interface BattlefieldDTO {
   sessionId: string
   /** 所屬團務容器 id；server 從 session 推導的唯讀衍生欄位，不可經 body 寫入（前端靠它打 session log GET 取出席成員） */
   containerId: string
-  /** 同一戰場的第幾場戰鬥，範圍 BATTLEFIELD_LIMITS.BATTLE_SEQUENCE_MIN..BATTLE_SEQUENCE_MAX */
+  /**
+   * 同一戰場的戰鬥發生次數，範圍 BATTLEFIELD_LIMITS.BATTLE_SEQUENCE_MIN..BATTLE_SEQUENCE_MAX。
+   * 不可回退（backend 拒絕遞減）；遞增即觸發 backend 拍下該場起始快照，供還原 API 取用。
+   */
   battleSequence: number
   /** 目前輪次，範圍 BATTLEFIELD_LIMITS.ROUND_MIN..ROUND_MAX */
   round: number
   /** 目前行動單位的 unit id（client 生成、≤ 64，非 uuid）；無為 null */
   activeUnitId: string | null
-  /** false = 本場戰鬥已結束、尚未開下一場 */
+  /** @deprecated 結束戰鬥即進入下一場，已無「已結束但未開下一場」的中間態；下次 major 移除 */
   inProgress: boolean
   /** 參戰單位；長度 ≤ VALIDATION_LIMITS.maxUnitsPerBattlefield，寫入採整列 replace */
   units: BattlefieldUnit[]
@@ -156,3 +162,11 @@ export type BattlefieldUpdateBody = Pick<BattlefieldDTO, 'updatedAt'> &
   Partial<
     Pick<BattlefieldDTO, 'battleSequence' | 'round' | 'activeUnitId' | 'inProgress' | 'units'>
   >
+
+/**
+ * POST /battlefields/:id/restore body；重置戰鬥時把戰場還原至**本場次的起始快照**
+ * （backend 於 battleSequence 遞增時拍下），回應為還原後的 BattlefieldDTO。
+ * updatedAt 為樂觀鎖 token，不符回 409；battleSequence 不因還原而變動。
+ * 無快照可用（第 1 場，或快照與當前場次不符）回 404，由 client 自行決定退路。
+ */
+export type BattlefieldRestoreBody = Pick<BattlefieldDTO, 'updatedAt'>
